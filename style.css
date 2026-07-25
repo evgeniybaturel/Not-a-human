@@ -1,0 +1,527 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        sans-serif;
+
+    background: #090914;
+
+    color: #e5e7eb;
+
+    min-height: 100vh;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding: 16px;
+
+}
+
+
+
+#app {
+
+    width: 100%;
+
+    max-width: 480px;
+
+    min-height: 600px;
+
+    background: #141421;
+
+    border-radius: 28px;
+
+    border: 1px solid rgba(255,255,255,0.05);
+
+    padding: 28px 20px;
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+
+
+.hidden {
+
+    display: none !important;
+
+}
+
+
+
+/* =====================
+   СТАРТ
+===================== */
+
+
+#start-screen {
+
+    flex: 1;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    text-align: center;
+
+    gap: 20px;
+
+}
+
+
+
+h1 {
+
+    font-size: 38px;
+
+    font-weight: 700;
+
+    color: #f8fafc;
+
+}
+
+
+
+h1::after {
+
+    content: "";
+
+    display: block;
+
+    width: 45px;
+
+    height: 3px;
+
+    margin: 10px auto;
+
+    background:
+        linear-gradient(
+            135deg,
+            #8b5cf6,
+            #38bdf8
+        );
+
+    border-radius: 5px;
+
+}
+
+
+
+.sub {
+
+    color: #8b8ba8;
+
+    font-size: 16px;
+
+}
+
+
+
+/* =====================
+   КАРТОЧКИ
+===================== */
+
+
+.card {
+
+    width: 100%;
+
+    background: #1b1b2b;
+
+    border-radius: 22px;
+
+    padding: 22px;
+
+    border:
+
+        1px solid
+
+        rgba(255,255,255,0.05);
+
+}
+
+
+
+.divider {
+
+    margin: 18px 0;
+
+    color: #6b7280;
+
+}
+
+
+
+input,
+textarea {
+
+
+    width: 100%;
+
+    background: #11111d;
+
+    border:
+
+        1px solid
+
+        #2d2d45;
+
+
+    color: white;
+
+    border-radius: 14px;
+
+    padding: 14px 16px;
+
+    font-size: 16px;
+
+    outline: none;
+
+}
+
+
+
+input:focus,
+textarea:focus {
+
+    border-color: #8b5cf6;
+
+    box-shadow:
+
+        0 0 0 3px
+
+        rgba(139,92,246,.15);
+
+}
+
+
+
+textarea {
+
+    min-height: 120px;
+
+    resize: none;
+
+}
+
+
+
+/* =====================
+   КНОПКИ
+===================== */
+
+
+.btn {
+
+
+    width: 100%;
+
+    margin-top: 12px;
+
+    padding: 15px;
+
+    border-radius: 16px;
+
+    border: none;
+
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #8b5cf6,
+            #6366f1
+        );
+
+
+    color: white;
+
+    font-size: 18px;
+
+    font-weight: 600;
+
+
+    cursor: pointer;
+
+}
+
+
+
+.btn:active {
+
+    transform: scale(.97);
+
+}
+
+
+
+.btn-secondary {
+
+    background:
+
+        #222235;
+
+    border:
+
+        1px solid
+
+        #343450;
+
+}
+
+
+
+/* =====================
+   КОМНАТА
+===================== */
+
+
+#room-info {
+
+    text-align: center;
+
+    background:
+
+        #1b1b2b;
+
+    padding: 25px;
+
+    border-radius: 20px;
+
+}
+
+
+
+.room-code {
+
+
+    margin: 15px 0;
+
+
+    font-size: 36px;
+
+
+    letter-spacing: 8px;
+
+
+    color: #a78bfa;
+
+
+    font-weight: 700;
+
+}
+
+
+
+/* =====================
+   ИГРА
+===================== */
+
+
+#game-screen {
+
+
+    flex: 1;
+
+}
+
+
+
+.header {
+
+
+    display: flex;
+
+    justify-content: space-between;
+
+    padding-bottom: 15px;
+
+
+    border-bottom:
+
+        1px solid
+
+        #252538;
+
+
+    color: #a5b4fc;
+
+}
+
+
+
+.question-box {
+
+
+    margin-top: 25px;
+
+    background:
+
+        #1b1b2b;
+
+
+    padding: 20px;
+
+    border-radius: 20px;
+
+}
+
+
+
+.label {
+
+
+    color:
+
+        #8b5cf6;
+
+
+    font-size: 13px;
+
+    margin-bottom: 10px;
+
+}
+
+
+
+#question-text {
+
+
+    font-size: 20px;
+
+    line-height: 1.5;
+
+}
+
+
+
+.answer-box {
+
+
+    margin-top: 20px;
+
+}
+
+
+
+#waiting-text {
+
+
+    text-align:center;
+
+    margin-top:20px;
+
+    color:#8888aa;
+
+}
+
+
+
+/* =====================
+   ГОЛОСОВАНИЕ
+===================== */
+
+
+#vote-screen {
+
+
+    flex:1;
+
+}
+
+
+
+.answer-card {
+
+
+    background:
+
+        #1b1b2b;
+
+
+    padding:16px;
+
+
+    border-radius:16px;
+
+
+    margin-top:12px;
+
+
+    border:
+
+        1px solid
+
+        #2b2b42;
+
+
+    cursor:pointer;
+
+}
+
+
+
+.answer-card.selected {
+
+
+    border-color:#8b5cf6;
+
+
+    background:
+
+        rgba(139,92,246,.15);
+
+}
+
+
+
+/* =====================
+   АДАПТИВ
+===================== */
+
+
+@media(max-width:420px){
+
+
+    #app {
+
+        border-radius:20px;
+
+        padding:20px 14px;
+
+    }
+
+
+    h1 {
+
+        font-size:30px;
+
+    }
+
+
+    #question-text {
+
+        font-size:18px;
+
+    }
+
+}
