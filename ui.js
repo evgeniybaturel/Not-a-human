@@ -1,33 +1,57 @@
 // ============================================================
 // UI CONTROLLER
 // NOT A HUMAN
-// Интерфейс игры
+// Interface Manager
 // ============================================================
 
 
 
 // ============================================================
-// ЭКРАНЫ
+// SCREEN CONTROL
 // ============================================================
 
 
 function showScreen(id){
 
 
-    document
-    .querySelectorAll(".screen")
-    .forEach(screen=>{
+    const screens = [
 
-        screen.classList.add(
-            "hidden"
+        "start-screen",
+        "lobby-screen",
+        "game-screen",
+        "vote-screen",
+        "final-screen"
+
+    ];
+
+
+
+    screens.forEach(screen=>{
+
+
+        const element =
+        document.getElementById(
+            screen
         );
+
+
+        if(element){
+
+            element.classList.add(
+                "hidden"
+            );
+
+        }
+
 
     });
 
 
 
+
+
     const target =
-        document.getElementById(id);
+    document.getElementById(id);
 
 
 
@@ -39,14 +63,19 @@ function showScreen(id){
 
     }
 
+
 }
 
 
 
 
 
+
+
+
+
 // ============================================================
-// СТАРТ
+// START
 // ============================================================
 
 
@@ -57,13 +86,18 @@ function openStart(){
         "start-screen"
     );
 
+
 }
 
 
 
 
+
+
+
+
 // ============================================================
-// ЛОББИ
+// LOBBY
 // ============================================================
 
 
@@ -74,7 +108,9 @@ function showLobby(){
         "lobby-screen"
     );
 
+
 }
+
 
 
 
@@ -83,18 +119,23 @@ function showLobby(){
 function updateRoomCode(code){
 
 
-    const el =
-        document.getElementById(
-            "room-display"
-        );
+
+    const element =
+    document.getElementById(
+        "room-display"
+    );
 
 
-    if(el){
 
-        el.textContent =
-            code;
+    if(element){
+
+
+        element.textContent =
+        code;
+
 
     }
+
 
 }
 
@@ -102,8 +143,12 @@ function updateRoomCode(code){
 
 
 
+
+
+
+
 // ============================================================
-// ИГРА
+// GAME
 // ============================================================
 
 
@@ -114,7 +159,10 @@ function openGame(){
         "game-screen"
     );
 
+
 }
+
+
 
 
 
@@ -124,16 +172,20 @@ function clearAnswer(){
 
 
     const input =
-        document.getElementById(
-            "answer-input"
-        );
+    document.getElementById(
+        "answer-input"
+    );
+
 
 
     if(input){
 
+
         input.value = "";
 
+
     }
+
 
 }
 
@@ -141,12 +193,16 @@ function clearAnswer(){
 
 
 
+
+
+
+
 // ============================================================
-// ГОЛОСОВАНИЕ
+// VOTING
 // ============================================================
 
 
-function showVoting(){
+function openVoting(){
 
 
     showScreen(
@@ -159,68 +215,50 @@ function showVoting(){
 
 
 
+
+
+
+
+
 // ============================================================
-// РЕЗУЛЬТАТЫ
+// FINAL
 // ============================================================
 
 
-function showResult(text){
+function showFinalResult(text){
+
 
 
     showScreen(
-        "result-screen"
+        "final-screen"
     );
 
 
+
+
     const result =
-        document.getElementById(
-            "result-text"
-        );
+    document.getElementById(
+        "final-result"
+    );
+
 
 
     if(result){
 
-        result.textContent =
-            text;
+
+        result.innerHTML =
+        text;
+
 
     }
 
+
+
 }
 
 
 
 
-
-// ============================================================
-// ПОЛУЧЕНИЕ ОЧКОВ
-// ============================================================
-
-
-function calculateScore(){
-
-
-    /*
-    
-    Логика первой версии:
-
-    Если игрок угадал другого игрока:
-    +1 очко
-
-    Если игрок убедил всех,
-    что он ИИ:
-    +2 очка
-
-
-    Позже сюда добавим:
-    - статистику
-    - рейтинг
-    - серии побед
-    */
-
-
-    return 0;
-
-}
 
 
 
@@ -234,10 +272,12 @@ function calculateScore(){
 function initApiInput(){
 
 
+
     const input =
-        document.getElementById(
-            "api-key"
-        );
+    document.getElementById(
+        "api-key"
+    );
+
 
 
     if(!input)
@@ -245,19 +285,28 @@ function initApiInput(){
 
 
 
+
+
     const saved =
-        localStorage.getItem(
-            "groq_api_key"
-        );
+    localStorage.getItem(
+        "groq_api_key"
+    );
+
+
 
 
 
     if(saved){
 
+
         input.value =
-            saved;
+        saved;
+
 
     }
+
+
+
 
 
 
@@ -275,14 +324,20 @@ function initApiInput(){
         }
     );
 
+
+
 }
 
 
 
 
 
+
+
+
+
 // ============================================================
-// КНОПКИ
+// LOAD
 // ============================================================
 
 
@@ -295,21 +350,14 @@ document.addEventListener(
 
 
 
-    document
-    .getElementById(
-        "back-btn"
-    )
-    ?.addEventListener(
-        "click",
-        openStart
-    );
-
-
 });
 
 
 
 
+
+
+
 console.log(
-    "🎨 UI loaded"
+"🎨 UI controller loaded"
 );
