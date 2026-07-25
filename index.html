@@ -22,7 +22,7 @@
 
 
 <!-- ==============================
-     ГЛАВНЫЙ ЭКРАН
+     СТАРТ
 ================================ -->
 
 
@@ -35,16 +35,18 @@
 
 
 <p class="subtitle">
-    Тест Тьюринга для двоих
+    Тест Тьюринга наоборот
 </p>
 
 
 <div class="description">
 
-Один из вас может быть человеком.<br>
-Другой должен убедить всех, что он ИИ.
+Два человека и один ИИ отвечают на вопросы.<br>
+Люди пытаются казаться искусственным интеллектом.<br>
+ИИ пытается выглядеть человеком.
 
 </div>
+
 
 
 
@@ -52,7 +54,7 @@
 
 
 <h3>
-Создать комнату
+Создать эксперимент
 </h3>
 
 
@@ -60,7 +62,7 @@
 class="btn"
 id="create-room-btn">
 
-🧠 Создать эксперимент
+🧠 Создать комнату
 
 </button>
 
@@ -79,6 +81,7 @@ class="room-code">
 
 
 
+
 <div class="card">
 
 
@@ -88,12 +91,20 @@ class="room-code">
 
 
 <input
+
 id="room-input"
-placeholder="Код комнаты">
+
+placeholder="Введите код комнаты"
+
+maxlength="6"
+
+>
 
 
 <button
+
 class="btn secondary"
+
 id="join-room-btn">
 
 🔗 Войти
@@ -113,18 +124,22 @@ id="join-room-btn">
 
 
 
+
 <!-- ==============================
-     ОЖИДАНИЕ
+     ЛОББИ
 ================================ -->
 
 
 <section
+
 id="lobby-screen"
+
 class="hidden">
 
 
+
 <h2>
-Комната создана
+Эксперимент создан
 </h2>
 
 
@@ -132,7 +147,7 @@ class="hidden">
 <div class="experiment-box">
 
 
-Код эксперимента:
+Код комнаты:
 
 
 <strong id="room-display">
@@ -144,15 +159,18 @@ class="hidden">
 
 
 
-<div 
-class="waiting">
+<div class="waiting">
+
 
 ⏳ Ожидание второго участника...
+
 
 </div>
 
 
+
 </section>
+
 
 
 
@@ -167,8 +185,11 @@ class="waiting">
 
 
 <section
+
 id="game-screen"
+
 class="hidden">
+
 
 
 <header class="game-header">
@@ -176,10 +197,12 @@ class="hidden">
 
 <div>
 
-Раунд
+Раунд:
 
 <span id="round-number">
+
 1
+
 </span>
 
 </div>
@@ -188,10 +211,12 @@ class="hidden">
 
 <div>
 
-Очки
+Очки:
 
 <span id="score">
+
 0
+
 </span>
 
 </div>
@@ -203,33 +228,15 @@ class="hidden">
 
 
 
-<div class="role-card">
-
-
-<span>
-Ваша роль:
-</span>
-
-
-<strong id="role-text">
-
-???
-
-</strong>
-
-
-</div>
-
-
-
-
-
 <div class="question-card">
 
 
 <h2>
+
 Вопрос
+
 </h2>
+
 
 
 <p id="question-text">
@@ -252,7 +259,7 @@ class="hidden">
 
 id="answer-input"
 
-placeholder="Ответьте так, чтобы вас приняли за ИИ..."
+placeholder="Ответьте как искусственный интеллект..."
 
 ></textarea>
 
@@ -260,7 +267,9 @@ placeholder="Ответьте так, чтобы вас приняли за ИИ
 
 
 <button
+
 class="btn"
+
 id="send-answer-btn">
 
 Отправить ответ
@@ -273,12 +282,17 @@ id="send-answer-btn">
 
 
 
-<div 
+<div
+
 id="answer-wait"
+
 class="waiting hidden">
 
+
 Ответ отправлен.<br>
-Ждём второго игрока...
+
+Генерация эксперимента...
+
 
 </div>
 
@@ -293,19 +307,23 @@ class="waiting hidden">
 
 
 
+
 <!-- ==============================
      ГОЛОСОВАНИЕ
 ================================ -->
 
 
 <section
+
 id="vote-screen"
+
 class="hidden">
+
 
 
 <h2>
 
-Кто настоящий человек?
+Кто настоящий ИИ?
 
 </h2>
 
@@ -313,9 +331,11 @@ class="hidden">
 
 <p class="hint">
 
-Проанализируйте стиль ответа
+Проанализируйте стиль ответа.<br>
+Кто выглядит как искусственный интеллект?
 
 </p>
+
 
 
 
@@ -325,12 +345,12 @@ class="hidden">
 
 
 <button
+
 class="answer-card"
+
 id="vote-one">
 
-
-Ответ игрока 1
-
+Ответ A
 
 </button>
 
@@ -338,18 +358,33 @@ id="vote-one">
 
 
 <button
+
 class="answer-card"
+
 id="vote-two">
 
+Ответ B
 
-Ответ игрока 2
+</button>
 
+
+
+
+<button
+
+class="answer-card"
+
+id="vote-three">
+
+Ответ C
 
 </button>
 
 
 
 </div>
+
+
 
 
 </section>
@@ -368,8 +403,11 @@ id="vote-two">
 
 
 <section
+
 id="final-screen"
+
 class="hidden">
+
 
 
 <h1>
@@ -380,18 +418,24 @@ class="hidden">
 
 
 
-<div 
+
+<div
+
 class="result-card"
+
 id="final-result">
 
+
 </div>
+
+
 
 
 
 <div class="score-board">
 
 
-Ваш счёт:
+Ваши очки:
 
 <span id="final-score">
 
@@ -404,8 +448,11 @@ id="final-result">
 
 
 
+
 <button
+
 class="btn"
+
 onclick="location.reload()">
 
 Новый эксперимент
@@ -413,7 +460,11 @@ onclick="location.reload()">
 </button>
 
 
+
 </section>
+
+
+
 
 
 
@@ -425,11 +476,14 @@ onclick="location.reload()">
 
 
 
+
 <!-- FIREBASE -->
+
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
 
 
 
