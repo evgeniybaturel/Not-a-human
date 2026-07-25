@@ -1,12 +1,15 @@
 // ============================================================
-// API ENGINE
+// GROQ API
 // NOT A HUMAN
-// Groq AI
+// AI PLAYER GENERATOR
 // ============================================================
 
 
 
-function getApiKey() {
+function getApiKey(){
+
+    // Пока оставляем ключ как был
+    // Позже вынесем безопасно
 
     return localStorage.getItem(
         "groq_api_key"
@@ -17,7 +20,8 @@ function getApiKey() {
 
 
 
-function saveApiKey(key) {
+
+function saveApiKey(key){
 
     if(key){
 
@@ -35,204 +39,53 @@ function saveApiKey(key) {
 
 
 
+
+
 // ============================================================
-// ГЕНЕРАЦИЯ ВОПРОСА
+// GENERATE QUESTION
 // ============================================================
 
 
 async function generateQuestion(){
 
 
+
     const apiKey =
-        getApiKey();
+    getApiKey();
+
 
 
 
     if(!apiKey){
 
-        return getFallbackQuestion();
+
+        return randomQuestion();
+
 
     }
 
 
 
+
+
+
     const prompt = `
 
-Ты ведущий игры Not a Human.
+Придумай вопрос для игры "Not a Human".
 
-Придумай интересный вопрос для теста Тьюринга.
-
-Игроки должны ответить так,
-чтобы можно было определить:
-человек они или искусственный интеллект.
+Игроки должны отвечать так,
+чтобы было сложно понять,
+человек это или искусственный интеллект.
 
 Правила:
 
-- вопрос должен быть открытым;
-- нельзя отвечать одним словом;
-- не используй слишком личные темы;
-- вопрос должен раскрывать стиль мышления человека.
+- вопрос открытый;
+- нельзя ответить одним словом;
+- не спрашивай личные данные;
+- не спрашивай про здоровье, адрес или деньги;
+- вопрос должен раскрывать характер человека.
 
 Верни только вопрос.
-
-`;
-
-
-
-    try{
-
-
-        const response =
-            await fetch(
-            "https://api.groq.com/openai/v1/chat/completions",
-            {
-
-
-                method:"POST",
-
-
-                headers:{
-
-
-                    "Content-Type":
-                    "application/json",
-
-
-                    "Authorization":
-                    `Bearer ${apiKey}`
-
-                },
-
-
-                body:JSON.stringify({
-
-                    model:
-                    "llama-3.3-70b-versatile",
-
-
-                    messages:[
-
-                        {
-
-                            role:"system",
-
-                            content:
-                            "Ты создаёшь вопросы для игры."
-
-                        },
-
-
-                        {
-
-                            role:"user",
-
-                            content:
-                            prompt
-
-                        }
-
-                    ],
-
-
-                    temperature:
-                    0.9,
-
-
-                    max_tokens:
-                    120
-
-
-                })
-
-
-            });
-
-
-
-        const data =
-            await response.json();
-
-
-
-        return data
-        .choices[0]
-        .message
-        .content
-        .trim();
-
-
-
-    }
-    catch(e){
-
-
-        console.error(e);
-
-
-        return getFallbackQuestion();
-
-
-    }
-
-
-}
-
-
-
-
-
-
-
-
-
-// ============================================================
-// ГЕНЕРАЦИЯ ОТВЕТА ИИ
-// ИИ ПЫТАЕТСЯ БЫТЬ ЧЕЛОВЕКОМ
-// ============================================================
-
-
-async function generateAIAnswer(question){
-
-
-
-    const apiKey =
-        getApiKey();
-
-
-
-    if(!apiKey){
-
-        return fallbackAIAnswer();
-
-    }
-
-
-
-
-    const prompt = `
-
-
-Ты участвуешь в игре Not a Human.
-
-Ты настоящий искусственный интеллект,
-но твоя задача — убедить игроков,
-что ты обычный человек.
-
-
-Ответь на вопрос:
-
-"${question}"
-
-
-Правила:
-
-- пиши естественно;
-- не используй слова "как ИИ";
-- не пиши слишком идеально;
-- добавь немного человеческой манеры;
-- можешь использовать эмоции;
-- ответ должен быть 2-5 предложений.
-
 
 `;
 
@@ -262,6 +115,7 @@ async function generateAIAnswer(question){
                 "Authorization":
                 `Bearer ${apiKey}`
 
+
             },
 
 
@@ -272,32 +126,25 @@ async function generateAIAnswer(question){
                 "llama-3.3-70b-versatile",
 
 
-
                 messages:[
 
 
                     {
 
-
                         role:"system",
 
-
                         content:
-                        "Ты человек, который отвечает естественно."
-
+                        "Ты создаёшь вопросы для игры."
 
                     },
 
 
                     {
 
-
                         role:"user",
-
 
                         content:
                         prompt
-
 
                     }
 
@@ -305,14 +152,12 @@ async function generateAIAnswer(question){
                 ],
 
 
-
                 temperature:
-                1.1,
-
+                1,
 
 
                 max_tokens:
-                200
+                80
 
 
             })
@@ -327,6 +172,7 @@ async function generateAIAnswer(question){
 
 
 
+
         return data
         .choices[0]
         .message
@@ -335,14 +181,12 @@ async function generateAIAnswer(question){
 
 
 
+
     }
-    catch(error){
+    catch(e){
 
 
-        console.error(error);
-
-
-        return fallbackAIAnswer();
+        return randomQuestion();
 
 
     }
@@ -356,43 +200,178 @@ async function generateAIAnswer(question){
 
 
 
+
+
 // ============================================================
-// СЛУЧАЙНЫЕ ВОПРОСЫ ЕСЛИ НЕТ API
+// AI PLAYER ANSWER
 // ============================================================
 
 
-function getFallbackQuestion(){
-
-
-    const questions=[
-
-
-        "Как бы вы описали свой идеальный день?",
-
-
-        "Какое решение в жизни оказалось самым неожиданным?",
-
-
-        "Что делает человека интересным собеседником?",
-
-
-        "Какой навык вы бы хотели получить мгновенно?",
-
-
-        "Что вы обычно делаете, когда у вас плохое настроение?"
-
-    ];
+async function generateAIAnswer(question){
 
 
 
-    return questions[
+    const apiKey =
+    getApiKey();
 
-        Math.floor(
-            Math.random() *
-            questions.length
-        )
 
-    ];
+
+
+    if(!apiKey){
+
+
+        return "Наверное, я бы просто попробовал сделать что-то удобное для людей. Не уверен, что есть один правильный ответ.";
+
+
+    }
+
+
+
+
+
+
+const prompt = `
+
+
+Ты играешь в игру "Not a Human".
+
+Твоя задача:
+выдать себя за обычного человека.
+
+Ответь на вопрос:
+
+${question}
+
+
+
+Правила ответа:
+
+- 2-4 предложения;
+- пиши простыми словами;
+- не используй списки;
+- не объясняй слишком подробно;
+- не звучишь как эксперт;
+- не используй фразы вроде "важно отметить", "комплексный подход", "это требует";
+- допускай небольшую неидеальность;
+- можно использовать "думаю", "наверное", "мне кажется";
+- ответ должен выглядеть как сообщение обычного человека.
+
+
+`;
+
+
+
+
+
+
+
+try{
+
+
+const response =
+await fetch(
+"https://api.groq.com/openai/v1/chat/completions",
+{
+
+
+method:"POST",
+
+
+headers:{
+
+
+"Content-Type":
+"application/json",
+
+
+"Authorization":
+`Bearer ${apiKey}`
+
+
+},
+
+
+body:JSON.stringify({
+
+
+model:
+"llama-3.3-70b-versatile",
+
+
+messages:[
+
+
+{
+
+role:"system",
+
+content:
+"Ты человек, который пытается выглядеть как ИИ, но не палится."
+
+},
+
+
+{
+
+role:"user",
+
+content:
+prompt
+
+}
+
+
+],
+
+
+temperature:
+1.3,
+
+
+max_tokens:
+90
+
+
+})
+
+
+});
+
+
+
+
+
+const data =
+await response.json();
+
+
+
+
+let answer =
+data
+.choices[0]
+.message
+.content
+.trim();
+
+
+
+
+return limitSentences(answer);
+
+
+
+
+
+}
+catch(e){
+
+
+return "Мне кажется, тут нет одного правильного ответа. Я бы сначала попробовал разобраться в ситуации.";
+
+
+}
+
 
 
 }
@@ -402,19 +381,39 @@ function getFallbackQuestion(){
 
 
 
-function fallbackAIAnswer(){
 
 
-    return (
 
-        "Думаю, многое зависит от ситуации. " +
-        "Обычно я стараюсь находить баланс между отдыхом и полезными делами. " +
-        "Иногда самые простые моменты оказываются самыми приятными."
+// ============================================================
+// LIMIT RESPONSE
+// ============================================================
 
+
+function limitSentences(text){
+
+
+
+    let sentences =
+    text.match(
+        /[^.!?]+[.!?]+/g
     );
 
 
+
+    if(!sentences)
+        return text;
+
+
+
+    return sentences
+    .slice(0,4)
+    .join(" ")
+    .trim();
+
+
 }
+
+
 
 
 
@@ -423,23 +422,51 @@ function fallbackAIAnswer(){
 
 
 // ============================================================
-// ПЕРЕМЕШИВАНИЕ ОТВЕТОВ
+// FALLBACK QUESTIONS
 // ============================================================
 
 
-function shuffleAnswers(array){
+function randomQuestion(){
 
 
-    return array.sort(
-        ()=>Math.random()-0.5
-    );
+
+const list=[
+
+
+"Какой момент из жизни ты часто вспоминаешь?",
+
+
+"Что тебе нравится делать, когда никто не мешает?",
+
+
+"Какой совет ты бы дал себе несколько лет назад?",
+
+
+"Что для тебя делает день хорошим?",
+
+
+"Какую вещь ты считаешь недооценённой?"
+
+
+];
+
+
+
+return list[
+Math.floor(
+Math.random()*list.length
+)
+];
 
 
 }
+
+
+
 
 
 
 
 console.log(
-    "🤖 AI engine loaded"
+"🤖 AI engine loaded"
 );
