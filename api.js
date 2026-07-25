@@ -1,78 +1,95 @@
 // ============================================================
 // GROQ API
-// Игра "Кто здесь ИИ?"
+// NOT A HUMAN
+// Генерация вопросов
 // ============================================================
 
 
 function getApiKey() {
 
-    const key =
-        localStorage.getItem('groq_api_key') || '';
-
-    return key;
-}
-
-
-
-// Если ключа нет - просим ввести
-
-function setApiKey() {
-
-    const key = prompt(
-        "Введите API ключ Groq"
-    );
-
-
-    if (key && key.trim()) {
-
-        localStorage.setItem(
-            'groq_api_key',
-            key.trim()
+    const saved =
+        localStorage.getItem(
+            "groq_api_key"
         );
 
-        return true;
-    }
 
+    return saved || "";
 
-    return false;
 }
 
 
 
-// ============================================================
-// ОСНОВНОЙ ЗАПРОС GROQ
-// ============================================================
+
+function saveApiKey(key) {
+
+    if(key){
+
+        localStorage.setItem(
+            "groq_api_key",
+            key
+        );
+
+    }
+
+}
 
 
-async function askGroq(system, prompt) {
 
 
-    let apiKey = getApiKey();
+
+// Генерация вопроса
+
+async function generateQuestion(){
 
 
-    if (!apiKey) {
-
-        if (!setApiKey()) {
-
-            throw new Error(
-                "Нет API ключа Groq"
-            );
-        }
+    const apiKey =
+        getApiKey();
 
 
-        apiKey = getApiKey();
+
+    if(!apiKey){
+
+        return "Расскажи что-нибудь о себе, что мало кто знает";
+
     }
 
 
 
-    const response =
-        await fetch(
+    const prompt = `
+
+Ты ведущий игры "Not a Human".
+
+Придумай один интересный вопрос,
+по которому можно понять человека.
+
+Правила:
+
+- вопрос должен быть открытым;
+- нельзя отвечать одним словом;
+- ответ должен раскрывать личность;
+- вопрос должен подходить для игры, где человек притворяется ИИ;
+- не задавай слишком личные вопросы;
+- не спрашивай про паспорт, адрес, здоровье.
+
+Верни только текст вопроса.
+Без кавычек.
+Без объяснений.
+
+`;
+
+
+
+    try {
+
+
+        const response =
+            await fetch(
             "https://api.groq.com/openai/v1/chat/completions",
             {
 
-                method: "POST",
+                method:"POST",
 
-                headers: {
+                headers:{
 
                     "Content-Type":
                         "application/json",
@@ -83,204 +100,116 @@ async function askGroq(system, prompt) {
                 },
 
 
-                body: JSON.stringify({
+                body:JSON.stringify({
 
                     model:
-                        "llama-3.3-70b-versatile",
+                    "llama-3.3-70b-versatile",
 
 
-                    messages: [
+                    messages:[
 
                         {
-                            role: "system",
-                            content: system
+
+                            role:"system",
+
+                            content:
+                            "Ты генератор вопросов для игры."
+
                         },
 
 
                         {
-                            role: "user",
-                            content: prompt
+
+                            role:"user",
+
+                            content:
+                            prompt
+
                         }
 
                     ],
 
 
-                    temperature: 0.9,
+                    temperature:0.9,
 
 
-                    max_tokens: 300
+                    max_tokens:100
+
 
                 })
 
-            }
-        );
+            });
 
 
 
-    if (!response.ok) {
+        if(!response.ok){
+
+            throw new Error(
+                "Ошибка Groq"
+            );
+
+        }
 
 
-        const error =
+
+        const data =
             await response.json();
 
 
-        throw new Error(
-            error.error?.message ||
-            "Ошибка Groq"
+
+        const question =
+            data
+            .choices[0]
+            .message
+            .content
+            .trim();
+
+
+
+        return question;
+
+
+
+    }
+
+    catch(error){
+
+
+        console.error(
+            error
         );
+
+
+        const fallback = [
+
+            "Какой момент из жизни ты никогда не забудешь?",
+
+            "Какую суперспособность ты бы выбрал?",
+
+            "Что тебе нравится, но ты редко рассказываешь другим?",
+
+            "Какой совет ты бы дал себе в прошлом?"
+
+        ];
+
+
+
+        return fallback[
+            Math.floor(
+                Math.random() *
+                fallback.length
+            )
+        ];
+
 
     }
 
 
-
-    const data =
-        await response.json();
-
-
-    return (
-
-        data
-        .choices[0]
-        .message
-        .content
-        .trim()
-
-    );
-
 }
 
 
-
-// ============================================================
-// ГЕНЕРАЦИЯ ВОПРОСА
-// ============================================================
-
-
-async function generateQuestion() {
-
-
-    const system = `
-
-Ты ведущий теста Тьюринга.
-
-Создавай интересные вопросы,
-на которые человек и ИИ могут ответить.
-
-Вопрос должен:
-- не иметь правильного ответа;
-- заставлять раскрывать мнение;
-- позволять заметить стиль мышления.
-
-Не задавай слишком личные вопросы.
-
-Ответь только текстом вопроса.
-
-`;
-
-
-
-    const prompt = `
-
-Придумай случайный вопрос для игры.
-
-`;
-
-
-
-    return await askGroq(
-        system,
-        prompt
-    );
-
-}
-
-
-
-// ============================================================
-// ГЕНЕРАЦИЯ ОТВЕТА ИИ
-// ============================================================
-
-
-async function generateAIAnswer(question) {
-
-
-    const system = `
-
-Ты участник игры "Кто здесь ИИ?".
-
-Ты искусственный интеллект,
-но пытаешься убедить людей,
-что ты настоящий человек.
-
-Отвечай естественно.
-
-Используй:
-- эмоции;
-- небольшие сомнения;
-- обычную речь.
-
-Не говори, что ты ИИ.
-
-Ответ должен быть 2-5 предложений.
-
-`;
-
-
-
-    const prompt = `
-
-
-Вопрос:
-
-${question}
-
-
-Ответь как человек.
-
-
-`;
-
-
-
-    return await askGroq(
-        system,
-        prompt
-    );
-
-}
-
-
-
-// ============================================================
-// АНАЛИЗ ПОСЛЕ ИГРЫ (ЗАГОТОВКА)
-// ============================================================
-
-
-async function analyzeGame(answers) {
-
-
-    const system = `
-
-Ты анализируешь тест Тьюринга.
-
-Определи:
-- какой ответ больше похож на ИИ;
-- какие признаки выдали участника.
-
-Ответь кратко.
-
-`;
-
-
-
-    return await askGroq(
-        system,
-        JSON.stringify(answers)
-    );
-
-}
 
 
 console.log(
-    "🤖 API модуль загружен"
+    "🤖 Groq API загружен"
 );
