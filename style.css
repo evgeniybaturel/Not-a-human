@@ -1,17 +1,14 @@
 /* ============================================================
-   КТО ЗДЕСЬ ИИ?
-   DESIGN SYSTEM
+   NOT A HUMAN
+   Dark mysterious UI
 ============================================================ */
 
 
 * {
-
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-
 }
-
 
 
 body {
@@ -21,10 +18,9 @@ body {
     background:
         radial-gradient(
             circle at top,
-            #1e1b4b,
-            #090914 45%
+            #1b1b35,
+            #090910 60%
         );
-
 
     font-family:
         -apple-system,
@@ -34,8 +30,7 @@ body {
         sans-serif;
 
 
-    color: #e5e7eb;
-
+    color: #eeeeff;
 
     display: flex;
 
@@ -43,57 +38,50 @@ body {
 
     align-items: center;
 
-
-    padding: 16px;
+    padding: 20px;
 
 }
-
 
 
 
 #app {
 
-
     width: 100%;
 
     max-width: 480px;
 
-
-    min-height: 600px;
-
+    min-height: 650px;
 
     background:
+        rgba(20,20,35,0.95);
 
-        rgba(20,20,33,0.96);
+
+    border:
+
+        1px solid rgba(255,255,255,0.08);
 
 
     border-radius: 28px;
 
 
-    border:
-
-        1px solid
-
-        rgba(255,255,255,0.06);
+    padding: 25px;
 
 
-    padding: 24px 20px;
+    box-shadow:
+
+        0 20px 60px rgba(0,0,0,0.5);
 
 
-    display: flex;
-
-    flex-direction: column;
-
+    overflow: hidden;
 
 }
-
 
 
 
 
 .hidden {
 
-    display:none !important;
+    display: none !important;
 
 }
 
@@ -102,132 +90,107 @@ body {
 
 
 /* ============================================================
-   ОБЩИЕ
+   START SCREEN
 ============================================================ */
 
 
+#start-screen,
+#lobby-screen,
+#game-screen,
+#vote-screen,
+#final-screen {
 
-h1 {
 
+    display: flex;
 
-    font-size: 38px;
+    flex-direction: column;
 
-    text-align:center;
+    gap: 20px;
 
-    color:#f8fafc;
-
-    margin-bottom:10px;
+    animation:
+        fade .3s ease;
 
 
 }
 
 
 
-h1::after {
+
+@keyframes fade {
+
+    from {
+
+        opacity:0;
+
+        transform:
+            translateY(10px);
+
+    }
 
 
-    content:"";
+    to {
+
+        opacity:1;
+
+        transform:
+            translateY(0);
+
+    }
+
+}
 
 
-    display:block;
 
+h1 {
 
-    width:50px;
+    font-size: 38px;
 
+    text-align:center;
 
-    height:3px;
-
-
-    margin:12px auto;
-
-
-    border-radius:5px;
+    letter-spacing: -1px;
 
 
     background:
 
         linear-gradient(
             135deg,
-            #8b5cf6,
-            #38bdf8
+            #a78bfa,
+            #60a5fa
         );
 
 
+    -webkit-background-clip:text;
+
+    color:transparent;
+
 }
+
 
 
 
 h2 {
 
-
-    text-align:center;
-
-    color:#f8fafc;
-
-    margin-bottom:20px;
-
+    font-size:24px;
 
 }
 
 
 
-.sub {
-
+.subtitle {
 
     text-align:center;
 
-    color:#8b8ba8;
+    color:#8888aa;
 
-    line-height:1.5;
-
-    margin-bottom:25px;
-
+    font-size:16px;
 
 }
-
-
 
 
 
 
 /* ============================================================
-   ЭКРАНЫ
-============================================================ */
-
-
-#start-screen,
-#room-screen,
-#game-screen,
-#vote-screen {
-
-
-    flex:1;
-
-}
-
-
-
-
-
-#start-screen {
-
-
-    display:flex;
-
-    flex-direction:column;
-
-    justify-content:center;
-
-
-}
-
-
-
-
-
-
-/* ============================================================
-   КАРТОЧКИ
+   CARDS
 ============================================================ */
 
 
@@ -236,42 +199,37 @@ h2 {
 
     background:
 
-        #1a1a2b;
-
-
-    border-radius:22px;
-
-
-    padding:22px;
+        #191927;
 
 
     border:
 
-        1px solid
-
-        #292941;
+        1px solid #292942;
 
 
-}
+    border-radius:20px;
 
 
+    padding:20px;
 
 
+    display:flex;
 
-.divider {
+    flex-direction:column;
 
-
-    text-align:center;
-
-
-    margin:16px 0;
-
-
-    color:#777799;
+    gap:15px;
 
 
 }
 
+
+
+
+.card h3 {
+
+    color:#ccccff;
+
+}
 
 
 
@@ -289,34 +247,27 @@ textarea {
     width:100%;
 
 
-    background:
-
-        #10101b;
+    background:#11111d;
 
 
     border:
 
-        1px solid
-
-        #30304a;
-
-
-    color:white;
+        1px solid #30304a;
 
 
     border-radius:14px;
 
 
-    padding:14px 16px;
+    padding:15px;
+
+
+    color:white;
 
 
     font-size:16px;
 
 
     outline:none;
-
-
-    margin-bottom:12px;
 
 
 }
@@ -333,7 +284,6 @@ textarea:focus {
     box-shadow:
 
         0 0 0 3px
-
         rgba(139,92,246,.15);
 
 
@@ -345,11 +295,10 @@ textarea:focus {
 textarea {
 
 
-    height:130px;
+    min-height:130px;
 
 
     resize:none;
-
 
 }
 
@@ -358,7 +307,7 @@ textarea {
 
 
 /* ============================================================
-   КНОПКИ
+   BUTTONS
 ============================================================ */
 
 
@@ -368,7 +317,7 @@ textarea {
     width:100%;
 
 
-    padding:16px;
+    padding:15px;
 
 
     border:none;
@@ -377,7 +326,10 @@ textarea {
     border-radius:16px;
 
 
-    font-size:18px;
+    cursor:pointer;
+
+
+    font-size:17px;
 
 
     font-weight:600;
@@ -385,11 +337,6 @@ textarea {
 
     color:white;
 
-
-    cursor:pointer;
-
-
-    margin-top:8px;
 
 
     background:
@@ -401,11 +348,261 @@ textarea {
         );
 
 
+    transition:.2s;
+
+
 }
 
 
 
+
 .btn:active {
+
+    transform:scale(.96);
+
+}
+
+
+
+
+.btn.secondary {
+
+
+    background:#25253a;
+
+
+    border:
+
+        1px solid #353552;
+
+
+}
+
+
+
+
+
+/* ============================================================
+   ROOM
+============================================================ */
+
+
+.room-code {
+
+
+    text-align:center;
+
+
+    font-size:32px;
+
+
+    letter-spacing:5px;
+
+
+    color:#34d399;
+
+
+    font-weight:700;
+
+}
+
+
+
+.status {
+
+
+    text-align:center;
+
+
+    color:#fbbf24;
+
+
+}
+
+
+
+.room-display {
+
+
+    background:#11111d;
+
+
+    padding:20px;
+
+
+    border-radius:16px;
+
+
+    text-align:center;
+
+
+    font-size:30px;
+
+
+    letter-spacing:6px;
+
+
+}
+
+
+
+
+
+.waiting {
+
+
+    text-align:center;
+
+
+    color:#9999bb;
+
+
+    padding:15px;
+
+}
+
+
+
+
+
+/* ============================================================
+   GAME
+============================================================ */
+
+
+header {
+
+
+    display:flex;
+
+
+    justify-content:space-between;
+
+
+    color:#aaaacc;
+
+
+    padding-bottom:15px;
+
+
+    border-bottom:
+
+        1px solid #28283d;
+
+
+}
+
+
+
+
+
+.question-card {
+
+
+    background:#1c1c2c;
+
+
+    border:
+
+        1px solid #32324b;
+
+
+    border-radius:20px;
+
+
+    padding:20px;
+
+
+
+}
+
+
+
+.question-card p {
+
+
+    margin-top:15px;
+
+
+    line-height:1.6;
+
+
+    color:#ddddee;
+
+
+}
+
+
+
+
+
+.answer-block {
+
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:15px;
+
+
+}
+
+
+
+
+
+/* ============================================================
+   VOTE
+============================================================ */
+
+
+.answers {
+
+
+    display:flex;
+
+
+    flex-direction:column;
+
+
+    gap:15px;
+
+}
+
+
+
+.answer-card {
+
+
+    background:#202035;
+
+
+    border:
+
+        1px solid #383854;
+
+
+    border-radius:18px;
+
+
+    padding:20px;
+
+
+    color:white;
+
+
+    font-size:18px;
+
+
+    cursor:pointer;
+
+
+}
+
+
+
+.answer-card:active {
 
 
     transform:scale(.97);
@@ -416,271 +613,35 @@ textarea {
 
 
 
-.btn-secondary {
-
-
-    background:
-
-        #222235;
-
-
-    border:
-
-        1px solid
-
-        #383852;
-
-
-}
-
-
-
-
 
 /* ============================================================
-   КОМНАТА
+   FINAL
 ============================================================ */
 
 
-.room-code {
+#final-result {
 
 
-    text-align:center;
-
-
-    font-size:40px;
-
-
-    font-weight:700;
-
-
-    letter-spacing:8px;
-
-
-    color:#a78bfa;
-
-
-    margin:20px 0;
-
-
-}
-
-
-
-
-
-#players-status {
-
-
-    text-align:center;
-
-
-    color:#9ca3af;
-
-
-    margin-bottom:15px;
-
-
-}
-
-
-
-
-
-
-/* ============================================================
-   ИГРА
-============================================================ */
-
-
-.header {
-
-
-    display:flex;
-
-
-    justify-content:space-between;
-
-
-    color:#a78bfa;
-
-
-    padding-bottom:15px;
-
-
-    border-bottom:
-
-        1px solid
-
-        #27273b;
-
-
-}
-
-
-
-
-.question-box {
-
-
-    margin-top:25px;
-
-
-    padding:22px;
-
-
-    background:
-
-        #1a1a2b;
-
-
-    border-radius:22px;
-
-
-    border:
-
-        1px solid
-
-        #292941;
-
-
-}
-
-
-
-
-
-.label {
-
-
-    font-size:12px;
-
-
-    color:#8b5cf6;
-
-
-    margin-bottom:10px;
-
-
-}
-
-
-
-
-
-#question-text {
-
-
-    font-size:20px;
-
-
-    line-height:1.5;
-
-
-}
-
-
-
-
-
-#waiting-text {
-
-
-    text-align:center;
-
-
-    color:#8888aa;
-
-
-    margin-top:20px;
-
-
-}
-
-
-
-
-
-
-
-/* ============================================================
-   ГОЛОСОВАНИЕ
-============================================================ */
-
-
-#answers-container {
-
-
-    margin-top:20px;
-
-
-}
-
-
-
-
-.answer-card {
-
-
-    background:
-
-        #1a1a2b;
-
-
-    padding:18px;
+    background:#191927;
 
 
     border-radius:18px;
 
 
-    margin-bottom:12px;
+    padding:20px;
 
 
-    border:
-
-        1px solid
-
-        #30304a;
-
-
-    cursor:pointer;
+    line-height:1.6;
 
 
 }
-
-
-
-.answer-card:hover {
-
-
-    border-color:#8b5cf6;
-
-
-}
-
-
-
-.answer-card.selected {
-
-
-    background:
-
-        rgba(139,92,246,.15);
-
-
-    border-color:#8b5cf6;
-
-
-}
-
-
 
 
 
 
 
 /* ============================================================
-   МОБИЛЬНАЯ ВЕРСИЯ
+   MOBILE
 ============================================================ */
 
 
@@ -689,15 +650,11 @@ textarea {
 
     #app {
 
+        min-height:560px;
 
-        min-height:550px;
-
-
-        padding:20px 14px;
-
+        padding:18px;
 
         border-radius:22px;
-
 
     }
 
@@ -705,21 +662,10 @@ textarea {
 
     h1 {
 
-
-        font-size:30px;
-
+        font-size:32px;
 
     }
 
 
 
-    #question-text {
-
-
-        font-size:18px;
-
-
-    }
-
-
-}
+   }
