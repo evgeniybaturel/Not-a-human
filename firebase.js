@@ -1,12 +1,13 @@
 // ============================================================
-// FIREBASE CONFIG
-// Кто здесь ИИ?
+// FIREBASE CONNECTION
+// NOT A HUMAN
 // ============================================================
 
 
 // Конфигурация Firebase
 
 const firebaseConfig = {
+
     apiKey: "AIzaSyAUA65cW3VJrmfwHjKKxlUHKJVgYYEDjWo",
 
     authDomain:
@@ -26,22 +27,27 @@ const firebaseConfig = {
 
     appId:
         "1:180222999417:web:b3650309fafe629edf0da8"
+
 };
 
 
-// Запуск Firebase
+
+// Инициализация Firebase
 
 firebase.initializeApp(firebaseConfig);
 
 
-// Подключение базы
+
+// Подключаем Realtime Database
 
 const database = firebase.database();
 
 
-// Экспортируем глобально
 
-window.firebaseDatabase = database;
+// Делаем доступным для других файлов
+
+window.database = database;
+
 
 
 console.log("🔥 Firebase подключен");
