@@ -1,7 +1,7 @@
 // ============================================================
 // UI CONTROLLER
 // NOT A HUMAN
-// Interface Manager
+// Интерфейс игры
 // ============================================================
 
 
@@ -14,34 +14,18 @@
 function showScreen(id){
 
 
-    const screens = [
-
-        "start-screen",
-        "lobby-screen",
-        "game-screen",
-        "vote-screen",
-        "final-screen"
-
-    ];
+    document
+    .querySelectorAll(
+        "section"
+    )
+    .forEach(section=>{
 
 
-
-    screens.forEach(screen=>{
-
-
-        const element =
-        document.getElementById(
-            screen
+        section
+        .classList
+        .add(
+            "hidden"
         );
-
-
-        if(element){
-
-            element.classList.add(
-                "hidden"
-            );
-
-        }
 
 
     });
@@ -50,16 +34,23 @@ function showScreen(id){
 
 
 
-    const target =
-    document.getElementById(id);
+    const screen =
+    document
+    .getElementById(id);
 
 
 
-    if(target){
 
-        target.classList.remove(
+
+    if(screen){
+
+
+        screen
+        .classList
+        .remove(
             "hidden"
         );
+
 
     }
 
@@ -96,6 +87,7 @@ function openStart(){
 
 
 
+
 // ============================================================
 // LOBBY
 // ============================================================
@@ -120,21 +112,24 @@ function updateRoomCode(code){
 
 
 
-    const element =
-    document.getElementById(
-        "room-display"
-    );
+const element =
+document
+.getElementById(
+"room-display"
+);
 
 
 
-    if(element){
+
+if(element){
 
 
-        element.textContent =
-        code;
+element.textContent =
+code;
 
 
-    }
+}
+
 
 
 }
@@ -167,24 +162,27 @@ function openGame(){
 
 
 
-
 function clearAnswer(){
 
 
-    const input =
-    document.getElementById(
-        "answer-input"
-    );
+const input =
+document
+.getElementById(
+"answer-input"
+);
 
 
 
-    if(input){
+
+if(input){
 
 
-        input.value = "";
+input.value =
+"";
 
 
-    }
+}
+
 
 
 }
@@ -202,12 +200,12 @@ function clearAnswer(){
 // ============================================================
 
 
-function openVoting(){
+function showVoting(){
 
 
-    showScreen(
-        "vote-screen"
-    );
+showScreen(
+"vote-screen"
+);
 
 
 }
@@ -225,32 +223,35 @@ function openVoting(){
 // ============================================================
 
 
-function showFinalResult(text){
+function showResult(text){
 
 
 
-    showScreen(
-        "final-screen"
-    );
+showScreen(
+"final-screen"
+);
 
 
 
 
-    const result =
-    document.getElementById(
-        "final-result"
-    );
+const result =
+document
+.getElementById(
+"final-result"
+);
 
 
 
-    if(result){
 
 
-        result.innerHTML =
-        text;
+if(result){
 
 
-    }
+result.textContent =
+text;
+
+
+}
 
 
 
@@ -265,64 +266,31 @@ function showFinalResult(text){
 
 
 // ============================================================
-// API KEY
+// SCORE
 // ============================================================
 
 
-function initApiInput(){
+function updateScore(value){
 
 
 
-    const input =
-    document.getElementById(
-        "api-key"
-    );
-
-
-
-    if(!input)
-        return;
+const score =
+document
+.getElementById(
+"score"
+);
 
 
 
 
-
-    const saved =
-    localStorage.getItem(
-        "groq_api_key"
-    );
+if(score){
 
 
+score.textContent =
+value;
 
 
-
-    if(saved){
-
-
-        input.value =
-        saved;
-
-
-    }
-
-
-
-
-
-
-
-    input.addEventListener(
-        "change",
-        ()=>{
-
-
-            saveApiKey(
-                input.value.trim()
-            );
-
-
-        }
-    );
+}
 
 
 
@@ -337,16 +305,19 @@ function initApiInput(){
 
 
 // ============================================================
-// LOAD
+// INIT
 // ============================================================
 
 
-document.addEventListener(
+document
+.addEventListener(
 "DOMContentLoaded",
 ()=>{
 
 
-    initApiInput();
+console.log(
+"UI initialized"
+);
 
 
 
@@ -358,6 +329,7 @@ document.addEventListener(
 
 
 
+
 console.log(
-"🎨 UI controller loaded"
+"🎨 UI loaded"
 );
