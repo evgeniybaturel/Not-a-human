@@ -35,17 +35,17 @@
 
 
 <p class="subtitle">
-    Тест Тьюринга наоборот
+    Тест Тьюринга для двоих
 </p>
 
 
 <div class="description">
 
-Два человека и один ИИ отвечают на вопросы.<br>
-Люди пытаются казаться искусственным интеллектом.<br>
-ИИ пытается выглядеть человеком.
+Докажи, что ты человек.<br>
+Или заставь всех поверить, что ты ИИ.
 
 </div>
+
 
 
 
@@ -82,6 +82,7 @@ class="room-code">
 
 
 
+
 <div class="card">
 
 
@@ -90,15 +91,17 @@ class="room-code">
 </h3>
 
 
+
 <input
 
 id="room-input"
 
-placeholder="Введите код комнаты"
+placeholder="Код комнаты"
 
 maxlength="6"
 
 >
+
 
 
 <button
@@ -112,11 +115,14 @@ id="join-room-btn">
 </button>
 
 
+
 </div>
 
 
 
+
 </section>
+
 
 
 
@@ -139,15 +145,16 @@ class="hidden">
 
 
 <h2>
-Эксперимент создан
+Комната создана
 </h2>
+
 
 
 
 <div class="experiment-box">
 
 
-Код комнаты:
+Код эксперимента:
 
 
 <strong id="room-display">
@@ -159,11 +166,11 @@ class="hidden">
 
 
 
+
 <div class="waiting">
 
 
-⏳ Ожидание второго участника...
-
+⏳ Ожидание второго игрока...
 
 </div>
 
@@ -192,7 +199,10 @@ class="hidden">
 
 
 
+
+
 <header class="game-header">
+
 
 
 <div>
@@ -200,12 +210,11 @@ class="hidden">
 Раунд:
 
 <span id="round-number">
-
 1
-
 </span>
 
 </div>
+
 
 
 
@@ -214,15 +223,16 @@ class="hidden">
 Очки:
 
 <span id="score">
-
 0
-
 </span>
 
 </div>
 
 
+
 </header>
+
+
 
 
 
@@ -232,9 +242,7 @@ class="hidden">
 
 
 <h2>
-
 Вопрос
-
 </h2>
 
 
@@ -252,16 +260,21 @@ class="hidden">
 
 
 
+
+
+
 <div class="answer-area">
+
 
 
 <textarea
 
 id="answer-input"
 
-placeholder="Ответьте как искусственный интеллект..."
+placeholder="Ответьте так, чтобы вас приняли за ИИ..."
 
 ></textarea>
+
 
 
 
@@ -272,12 +285,18 @@ class="btn"
 
 id="send-answer-btn">
 
+
 Отправить ответ
+
 
 </button>
 
 
+
 </div>
+
+
+
 
 
 
@@ -291,7 +310,7 @@ class="waiting hidden">
 
 Ответ отправлен.<br>
 
-Генерация эксперимента...
+Ждём остальные ответы...
 
 
 </div>
@@ -321,18 +340,21 @@ class="hidden">
 
 
 
-<h2>
 
-Кто настоящий ИИ?
+
+<h2 id="vote-title">
+
+Кто кажется искусственным интеллектом?
 
 </h2>
 
 
 
+
+
 <p class="hint">
 
-Проанализируйте стиль ответа.<br>
-Кто выглядит как искусственный интеллект?
+Проанализируйте стиль ответа
 
 </p>
 
@@ -340,7 +362,11 @@ class="hidden">
 
 
 
+
+
 <div class="answers">
+
+
 
 
 
@@ -353,6 +379,9 @@ id="vote-one">
 Ответ A
 
 </button>
+
+
+
 
 
 
@@ -370,6 +399,9 @@ id="vote-two">
 
 
 
+
+
+
 <button
 
 class="answer-card"
@@ -382,8 +414,10 @@ id="vote-three">
 
 
 
-</div>
 
+
+
+</div>
 
 
 
@@ -398,7 +432,7 @@ id="vote-three">
 
 
 <!-- ==============================
-     РЕЗУЛЬТАТ
+     ФИНАЛ
 ================================ -->
 
 
@@ -410,11 +444,15 @@ class="hidden">
 
 
 
+
+
 <h1>
 
 Эксперимент завершён
 
 </h1>
+
+
 
 
 
@@ -432,10 +470,12 @@ id="final-result">
 
 
 
+
+
 <div class="score-board">
 
 
-Ваши очки:
+Ваш счёт:
 
 <span id="final-score">
 
@@ -444,7 +484,11 @@ id="final-result">
 </span>
 
 
+
 </div>
+
+
+
 
 
 
@@ -455,9 +499,12 @@ class="btn"
 
 onclick="location.reload()">
 
+
 Новый эксперимент
 
+
 </button>
+
 
 
 
@@ -477,12 +524,15 @@ onclick="location.reload()">
 
 
 
+
 <!-- FIREBASE -->
 
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 
+
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
 
 
 
@@ -500,6 +550,8 @@ onclick="location.reload()">
 <script src="game.js"></script>
 
 <script src="ui.js"></script>
+
+
 
 
 
