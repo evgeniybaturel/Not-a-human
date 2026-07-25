@@ -1,201 +1,283 @@
 <!DOCTYPE html>
 <html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Кто здесь ИИ?</title>
 
-    <link rel="stylesheet" href="style.css">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Кто здесь ИИ?</title>
+
+<link rel="stylesheet" href="style.css">
+
 </head>
+
 
 <body>
 
+
 <div id="app">
 
-    <!-- СТАРТ -->
-    <div id="start-screen">
 
-        <h1>Кто здесь ИИ?</h1>
 
-        <p class="sub">
-            Тест Тьюринга для двоих
-        </p>
+<!-- СТАРТ -->
 
+<div id="start-screen">
 
-        <div class="card">
 
-            <button id="create-room-btn" class="btn">
-                Создать комнату
-            </button>
+<h1>
+🤖 Кто здесь ИИ?
+</h1>
 
 
-            <div class="divider">
-                или
-            </div>
+<p class="sub">
+Попробуй убедить другого игрока,
+что ты искусственный интеллект
+</p>
 
 
-            <input 
-                id="room-code-input"
-                placeholder="Код комнаты"
-            >
 
+<div class="card">
 
-            <button id="join-room-btn" class="btn btn-secondary">
-                Подключиться
-            </button>
 
-        </div>
+<input 
+id="player-name"
+placeholder="Ваше имя"
+maxlength="20">
 
 
-        <div id="room-info" class="hidden">
+<button 
+class="btn"
+id="create-room-btn">
 
-            <h2>
-                Комната создана
-            </h2>
+Создать комнату
 
-            <div class="room-code"
-                 id="room-code">
-                ------
-            </div>
+</button>
 
-            <p>
-                Отправьте этот код другому игроку
-            </p>
 
-        </div>
 
+<div class="divider">
+или
+</div>
 
-    </div>
 
 
+<input 
+id="room-code"
+placeholder="Код комнаты">
 
-    <!-- ИГРА -->
 
-    <div id="game-screen" class="hidden">
+<button 
+class="btn btn-secondary"
+id="join-room-btn">
 
+Войти в комнату
 
-        <div class="header">
+</button>
 
-            <span id="player-name">
-                Участник
-            </span>
 
-            <span id="round-status">
-                Раунд 1
-            </span>
-
-        </div>
-
-
-
-        <div class="question-box">
-
-            <div class="label">
-                Вопрос
-            </div>
-
-
-            <div id="question-text">
-                Ожидание...
-            </div>
-
-        </div>
-
-
-
-        <div class="answer-box">
-
-            <textarea 
-                id="answer-input"
-                placeholder="Ваш ответ..."
-            ></textarea>
-
-
-            <button id="send-answer-btn"
-                    class="btn">
-
-                Ответить
-
-            </button>
-
-        </div>
-
-
-
-        <div id="waiting-text">
-
-        </div>
-
-
-
-    </div>
-
-
-
-    <!-- ГОЛОСОВАНИЕ -->
-
-
-    <div id="vote-screen" class="hidden">
-
-
-        <h2>
-            Кто настоящий ИИ?
-        </h2>
-
-
-        <div id="answers-list">
-
-        </div>
-
-
-        <button id="vote-btn"
-                class="btn">
-
-            Проголосовать
-
-        </button>
-
-
-    </div>
-
-
-
-
-    <!-- РЕЗУЛЬТАТ -->
-
-
-    <div id="result-screen"
-         class="hidden">
-
-
-        <h1>
-            Результат
-        </h1>
-
-
-        <div id="result-text">
-
-        </div>
-
-
-        <button id="restart-btn"
-                class="btn">
-
-            Новая игра
-
-        </button>
-
-
-    </div>
+</div>
 
 
 </div>
 
 
 
+
+
+<!-- КОМНАТА -->
+
+
+<div id="room-screen" class="hidden">
+
+
+<div class="card">
+
+
+<h2>
+Комната
+</h2>
+
+
+<div class="room-code"
+id="room-code-display">
+
+000000
+
+</div>
+
+
+
+<p id="players-status">
+
+Ожидание игрока...
+
+</p>
+
+
+
+<button
+class="btn"
+id="start-game-btn">
+
+Начать игру
+
+</button>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- ИГРА -->
+
+
+<div id="game-screen" class="hidden">
+
+
+<div class="header">
+
+
+<span id="room-small">
+
+Комната
+
+</span>
+
+
+<span id="score">
+
+0 : 0
+
+</span>
+
+
+</div>
+
+
+
+
+<div class="question-box">
+
+
+<div class="label">
+
+ВОПРОС
+
+</div>
+
+
+<div id="question-text">
+
+Ожидание...
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="answer-box">
+
+
+<textarea
+id="answer-input"
+placeholder="Напишите свой ответ...">
+</textarea>
+
+
+
+<button
+class="btn"
+id="send-answer-btn">
+
+Отправить ответ
+
+</button>
+
+
+
+</div>
+
+
+
+
+<p id="waiting-text">
+
+</p>
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- ГОЛОСОВАНИЕ -->
+
+
+<div id="vote-screen" class="hidden">
+
+
+<h2>
+Кто был ИИ?
+</h2>
+
+
+
+<div
+id="answers-container">
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+<!-- FIREBASE -->
+
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+
+
+<script src="firebase.js"></script>
+
 <script src="api.js"></script>
+
 <script src="game.js"></script>
 
 
+
 </body>
+
 </html>
