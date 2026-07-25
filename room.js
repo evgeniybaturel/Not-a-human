@@ -1,7 +1,7 @@
 // ============================================================
 // ROOM SYSTEM
 // NOT A HUMAN
-// Создание и подключение комнат
+// Комнаты: 2 человека + скрытый ИИ
 // ============================================================
 
 
@@ -13,22 +13,34 @@ let myRole = null;
 
 
 
-// Генерация ID игрока
+// ============================================================
+// СОЗДАНИЕ ID
+// ============================================================
+
 
 function createPlayerId(){
+
 
     return "player_" +
         Math.random()
         .toString(36)
         .substring(2,10);
 
+
 }
 
 
 
-// Генерация кода комнаты
+
+
+
+// ============================================================
+// КОД КОМНАТЫ
+// ============================================================
+
 
 function generateRoomCode(){
+
 
     const chars =
         "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -37,33 +49,48 @@ function generateRoomCode(){
     let result = "";
 
 
+
     for(let i = 0; i < 6; i++){
 
+
         result +=
-            chars[
-                Math.floor(
-                    Math.random() *
-                    chars.length
-                )
-            ];
+        chars[
+            Math.floor(
+                Math.random()
+                *
+                chars.length
+            )
+        ];
+
 
     }
 
 
+
     return result;
+
 
 }
 
 
 
 
-// Создать комнату
+
+
+
+
+// ============================================================
+// СОЗДАТЬ КОМНАТУ
+// ============================================================
+
 
 async function createRoom(){
 
 
+
     myPlayerId =
         createPlayerId();
+
 
 
     myRole =
@@ -71,85 +98,135 @@ async function createRoom(){
 
 
 
-    const roomCode =
+    const code =
         generateRoomCode();
 
 
 
     currentRoomId =
-        roomCode;
+        code;
+
+
 
 
 
     await database
-        .ref(
-            "rooms/" + roomCode
-        )
-        .set({
-
-            created:
-                Date.now(),
+    .ref(
+        "rooms/" + code
+    )
+    .set({
 
 
-            status:
-                "waiting",
+
+        created:
+        Date.now(),
+
+
+
+
+        status:
+        "waiting",
+
+
+
+
+        players:{
+
 
 
             player1:{
 
+
                 id:
-                    myPlayerId,
+                myPlayerId,
 
 
                 score:
-                    0
+                0
+
 
             },
 
 
-            player2:null,
+
+            player2:null
 
 
-            game:null
-
-
-        });
+        },
 
 
 
-    showCreatedRoom(
-        roomCode
-    );
 
+
+        ai:{
+
+
+            active:true,
+
+
+            type:
+            "hidden"
+
+
+        },
+
+
+
+
+
+        game:null
+
+
+
+
+    });
+
+
+
+
+
+
+    showCreatedRoom(code);
 
 
     openLobby();
 
 
-
     listenRoom();
+
+
 
 }
 
 
 
 
-// Подключиться к комнате
+
+
+
+
+// ============================================================
+// ВХОД В КОМНАТУ
+// ============================================================
+
 
 async function joinRoom(){
 
 
 
     const input =
-        document.getElementById(
-            "room-input"
-        );
+    document.getElementById(
+        "room-input"
+    );
+
 
 
     const code =
-        input.value
-        .trim()
-        .toUpperCase();
+    input.value
+    .trim()
+    .toUpperCase();
+
+
 
 
 
@@ -166,85 +243,126 @@ async function joinRoom(){
 
 
 
+
+
+
     const snapshot =
-        await database
-        .ref(
-            "rooms/" + code
-        )
-        .once(
-            "value"
-        );
+    await database
+    .ref(
+        "rooms/" + code
+    )
+    .once(
+        "value"
+    );
+
+
+
 
 
 
     if(!snapshot.exists()){
 
+
         alert(
             "Комната не найдена"
         );
 
+
         return;
 
+
     }
+
+
 
 
 
 
     const room =
-        snapshot.val();
+    snapshot.val();
 
 
 
-    if(room.player2){
+
+
+
+    if(
+        room.players &&
+        room.players.player2
+    ){
+
 
         alert(
             "Комната уже заполнена"
         );
 
+
         return;
+
 
     }
 
 
 
 
+
+
+
+
     myPlayerId =
-        createPlayerId();
+    createPlayerId();
+
 
 
 
     myRole =
-        "player2";
+    "player2";
+
 
 
 
     currentRoomId =
-        code;
+    code;
+
+
+
 
 
 
 
     await database
     .ref(
-        "rooms/" + code + "/player2"
+        "rooms/" +
+        code +
+        "/players/player2"
     )
     .set({
 
+
+
         id:
-            myPlayerId,
+        myPlayerId,
 
 
         score:
-            0
+        0
+
+
 
     });
 
 
 
 
+
+
+
+
     await database
     .ref(
-        "rooms/" + code + "/status"
+        "rooms/" +
+        code +
+        "/status"
     )
     .set(
         "ready"
@@ -252,11 +370,15 @@ async function joinRoom(){
 
 
 
+
+
+
     openLobby();
 
 
-
     listenRoom();
+
+
 
 }
 
@@ -264,13 +386,23 @@ async function joinRoom(){
 
 
 
-// Слушаем комнату
+
+
+
+
+// ============================================================
+// СЛУШАЕМ КОМНАТУ
+// ============================================================
+
 
 function listenRoom(){
 
 
+
     if(!currentRoomId)
         return;
+
+
 
 
 
@@ -284,8 +416,10 @@ function listenRoom(){
         snapshot=>{
 
 
+
             const room =
-                snapshot.val();
+            snapshot.val();
+
 
 
 
@@ -295,30 +429,45 @@ function listenRoom(){
 
 
 
+
+
             if(
-                room.player1 &&
-                room.player2
+
+                room.players.player1
+                &&
+                room.players.player2
+                &&
+                room.status === "ready"
+
             ){
+
 
 
                 showRoomReady();
 
 
-                setTimeout(
-                    ()=>{
 
-                        startGame();
 
-                    },
-                    1000
-                );
+                setTimeout(()=>{
+
+
+                    startGame();
+
+
+                },1500);
+
 
 
             }
 
 
+
+
+
         }
     );
+
+
 
 }
 
@@ -326,23 +475,35 @@ function listenRoom(){
 
 
 
-// Показываем код создателю
+
+
+
+
+// ============================================================
+// UI
+// ============================================================
+
 
 function showCreatedRoom(code){
 
 
+
     const el =
-        document.getElementById(
-            "created-room"
-        );
+    document.getElementById(
+        "created-room"
+    );
+
 
 
     if(el){
 
+
         el.textContent =
-            "Код: " + code;
+        "Код: " + code;
+
 
     }
+
 
 }
 
@@ -350,9 +511,9 @@ function showCreatedRoom(code){
 
 
 
-// Открываем экран ожидания
 
 function openLobby(){
+
 
 
     document
@@ -363,6 +524,7 @@ function openLobby(){
     .add(
         "hidden"
     );
+
 
 
 
@@ -377,20 +539,30 @@ function openLobby(){
 
 
 
+
+
     const display =
-        document.getElementById(
-            "room-display"
-        );
+    document.getElementById(
+        "room-display"
+    );
+
+
 
 
     if(display){
 
+
         display.textContent =
-            currentRoomId;
+        currentRoomId;
+
 
     }
 
+
+
 }
+
+
 
 
 
@@ -399,29 +571,44 @@ function openLobby(){
 function showRoomReady(){
 
 
+
     const wait =
-        document.querySelector(
-            ".waiting"
-        );
+    document.querySelector(
+        ".waiting"
+    );
+
 
 
     if(wait){
 
+
         wait.textContent =
-            "✅ Игрок найден";
+        "✅ Второй участник подключился. Запуск эксперимента...";
+
 
     }
+
+
 
 }
 
 
 
 
-// Кнопки
+
+
+
+
+
+// ============================================================
+// КНОПКИ
+// ============================================================
+
 
 document.addEventListener(
 "DOMContentLoaded",
 ()=>{
+
 
 
     document
@@ -435,6 +622,7 @@ document.addEventListener(
 
 
 
+
     document
     .getElementById(
         "join-room-btn"
@@ -445,10 +633,13 @@ document.addEventListener(
     );
 
 
+
 });
 
 
 
+
+
 console.log(
-    "🏠 Room system loaded"
+"🏠 Room system loaded"
 );
