@@ -1,19 +1,18 @@
 // ============================================================
 // GROQ API
 // NOT A HUMAN
-// AI PLAYER GENERATOR
+// Генерация вопросов + AI игрок
 // ============================================================
 
 
 
 function getApiKey(){
 
-    // Пока оставляем ключ как был
-    // Позже вынесем безопасно
 
     return localStorage.getItem(
         "groq_api_key"
     ) || "";
+
 
 }
 
@@ -21,7 +20,10 @@ function getApiKey(){
 
 
 
+
+
 function saveApiKey(key){
+
 
     if(key){
 
@@ -32,7 +34,9 @@ function saveApiKey(key){
 
     }
 
+
 }
+
 
 
 
@@ -50,40 +54,42 @@ async function generateQuestion(){
 
 
 
-    const apiKey =
-    getApiKey();
-
-
-
-
-    if(!apiKey){
-
-
-        return randomQuestion();
-
-
-    }
+const apiKey =
+getApiKey();
 
 
 
 
 
+if(!apiKey){
 
-    const prompt = `
 
-Придумай вопрос для игры "Not a Human".
+return randomQuestion();
 
-Игроки должны отвечать так,
-чтобы было сложно понять,
-человек это или искусственный интеллект.
 
-Правила:
+}
 
-- вопрос открытый;
-- нельзя ответить одним словом;
+
+
+
+
+
+
+const prompt = `
+
+Ты ведущий игры Not a Human.
+
+Придумай вопрос для теста Тьюринга.
+
+Люди будут отвечать, пытаясь выглядеть как ИИ.
+
+Требования:
+
+- вопрос должен быть открытым;
+- ответ должен занимать несколько предложений;
 - не спрашивай личные данные;
-- не спрашивай про здоровье, адрес или деньги;
-- вопрос должен раскрывать характер человека.
+- вопрос должен раскрывать стиль мышления человека;
+- не должно быть правильного ответа.
 
 Верни только вопрос.
 
@@ -93,103 +99,120 @@ async function generateQuestion(){
 
 
 
-    try{
 
 
-        const response =
-        await fetch(
-        "https://api.groq.com/openai/v1/chat/completions",
-        {
+try{
 
 
-            method:"POST",
+const response =
+await fetch(
+
+"https://api.groq.com/openai/v1/chat/completions",
+
+{
 
 
-            headers:{
+method:"POST",
 
 
-                "Content-Type":
-                "application/json",
+headers:{
 
 
-                "Authorization":
-                `Bearer ${apiKey}`
+"Content-Type":
+"application/json",
 
 
-            },
+"Authorization":
+`Bearer ${apiKey}`
 
 
-            body:JSON.stringify({
-
-
-                model:
-                "llama-3.3-70b-versatile",
-
-
-                messages:[
-
-
-                    {
-
-                        role:"system",
-
-                        content:
-                        "Ты создаёшь вопросы для игры."
-
-                    },
-
-
-                    {
-
-                        role:"user",
-
-                        content:
-                        prompt
-
-                    }
-
-
-                ],
-
-
-                temperature:
-                1,
-
-
-                max_tokens:
-                80
-
-
-            })
-
-
-        });
+},
 
 
 
-        const data =
-        await response.json();
+body:JSON.stringify({
+
+
+model:
+"llama-3.3-70b-versatile",
 
 
 
+messages:[
 
-        return data
-        .choices[0]
-        .message
-        .content
-        .trim();
+
+{
+
+role:"system",
+
+content:
+"Ты создаёшь вопросы для игры."
+
+},
+
+
+{
+
+role:"user",
+
+content:
+prompt
+
+}
+
+
+],
+
+
+
+temperature:1,
+
+
+max_tokens:100
+
+
+})
+
+
+}
+
+);
 
 
 
 
-    }
-    catch(e){
 
 
-        return randomQuestion();
+
+const data =
+await response.json();
 
 
-    }
+
+
+
+return data
+.choices[0]
+.message
+.content
+.trim();
+
+
+
+
+
+}
+catch(e){
+
+
+console.error(e);
+
+
+return randomQuestion();
+
+
+}
+
 
 
 }
@@ -211,19 +234,22 @@ async function generateAIAnswer(question){
 
 
 
-    const apiKey =
-    getApiKey();
+const apiKey =
+getApiKey();
 
 
 
 
-    if(!apiKey){
+
+if(!apiKey){
 
 
-        return "Наверное, я бы просто попробовал сделать что-то удобное для людей. Не уверен, что есть один правильный ответ.";
+return fakeHumanAnswer();
 
 
-    }
+}
+
+
 
 
 
@@ -232,32 +258,33 @@ async function generateAIAnswer(question){
 
 const prompt = `
 
+Ты играешь в игру Not a Human.
 
-Ты играешь в игру "Not a Human".
+Твоя роль — притвориться обычным человеком.
 
-Твоя задача:
-выдать себя за обычного человека.
+Другие игроки должны решить:
+ты настоящий человек или искусственный интеллект.
 
 Ответь на вопрос:
 
-${question}
+"${question}"
 
 
+Правила:
 
-Правила ответа:
-
-- 2-4 предложения;
-- пиши простыми словами;
+- пиши от первого лица;
+- 2-5 предложений;
 - не используй списки;
-- не объясняй слишком подробно;
-- не звучишь как эксперт;
-- не используй фразы вроде "важно отметить", "комплексный подход", "это требует";
-- допускай небольшую неидеальность;
-- можно использовать "думаю", "наверное", "мне кажется";
-- ответ должен выглядеть как сообщение обычного человека.
+- не звучать как ассистент;
+- не говори "как ИИ";
+- допускай небольшие человеческие неточности;
+- можешь добавить личное мнение или сомнение;
+- не делай идеальный философский ответ.
 
+Твой ответ должен выглядеть как сообщение обычного человека в чате.
 
 `;
+
 
 
 
@@ -270,7 +297,9 @@ try{
 
 const response =
 await fetch(
+
 "https://api.groq.com/openai/v1/chat/completions",
+
 {
 
 
@@ -291,11 +320,13 @@ headers:{
 },
 
 
+
 body:JSON.stringify({
 
 
 model:
 "llama-3.3-70b-versatile",
+
 
 
 messages:[
@@ -306,7 +337,7 @@ messages:[
 role:"system",
 
 content:
-"Ты человек, который пытается выглядеть как ИИ, но не палится."
+"Ты человек, который пытается пройти тест Тьюринга."
 
 },
 
@@ -324,18 +355,21 @@ prompt
 ],
 
 
-temperature:
-1.3,
+
+temperature:1.2,
 
 
-max_tokens:
-90
+max_tokens:150
 
 
 })
 
 
-});
+}
+
+);
+
+
 
 
 
@@ -347,17 +381,14 @@ await response.json();
 
 
 
-let answer =
-data
+
+
+return data
 .choices[0]
 .message
 .content
 .trim();
 
-
-
-
-return limitSentences(answer);
 
 
 
@@ -367,48 +398,15 @@ return limitSentences(answer);
 catch(e){
 
 
-return "Мне кажется, тут нет одного правильного ответа. Я бы сначала попробовал разобраться в ситуации.";
+console.error(e);
+
+
+return fakeHumanAnswer();
 
 
 }
 
 
-
-}
-
-
-
-
-
-
-
-
-
-// ============================================================
-// LIMIT RESPONSE
-// ============================================================
-
-
-function limitSentences(text){
-
-
-
-    let sentences =
-    text.match(
-        /[^.!?]+[.!?]+/g
-    );
-
-
-
-    if(!sentences)
-        return text;
-
-
-
-    return sentences
-    .slice(0,4)
-    .join(" ")
-    .trim();
 
 
 }
@@ -422,39 +420,72 @@ function limitSentences(text){
 
 
 // ============================================================
-// FALLBACK QUESTIONS
+// FALLBACK
 // ============================================================
+
 
 
 function randomQuestion(){
 
 
-
-const list=[
-
-
-"Какой момент из жизни ты часто вспоминаешь?",
+const questions=[
 
 
-"Что тебе нравится делать, когда никто не мешает?",
+"Какой момент из жизни ты чаще всего вспоминаешь?",
 
 
-"Какой совет ты бы дал себе несколько лет назад?",
+"Что бы ты изменил в современном мире?",
 
 
-"Что для тебя делает день хорошим?",
+"Какая маленькая вещь делает твой день лучше?",
 
 
-"Какую вещь ты считаешь недооценённой?"
+"Какой совет ты дал бы себе несколько лет назад?",
+
+
+"Что тебе кажется недооценённым людьми?"
 
 
 ];
 
 
-
-return list[
+return questions[
 Math.floor(
-Math.random()*list.length
+Math.random()*questions.length
+)
+];
+
+
+}
+
+
+
+
+
+
+
+
+function fakeHumanAnswer(){
+
+
+const answers=[
+
+
+"Наверное, я бы сказал, что мне нравится просто гулять вечером. Иногда такие обычные моменты почему-то запоминаются сильнее всего. Хотя сложно выбрать что-то одно.",
+
+
+"Интересный вопрос. Думаю, я бы не стал всё менять сразу, потому что неизвестно к чему это приведёт. Наверное, начал бы с маленьких вещей.",
+
+
+"Я часто замечаю, что самые простые вещи делают настроение лучше. Например, хороший разговор или случайная смешная ситуация."
+
+
+];
+
+
+return answers[
+Math.floor(
+Math.random()*answers.length
 )
 ];
 
@@ -468,5 +499,5 @@ Math.random()*list.length
 
 
 console.log(
-"🤖 AI engine loaded"
+"🤖 Groq API loaded"
 );
