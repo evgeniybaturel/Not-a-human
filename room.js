@@ -94,15 +94,12 @@ return code;
 async function createRoom(){
 
 
-
 myPlayerId =
 createPlayerId();
 
 
-
 myRole =
 "player1";
-
 
 
 
@@ -111,11 +108,8 @@ generateRoomCode();
 
 
 
-
 currentRoomId =
 roomCode;
-
-
 
 
 
@@ -126,44 +120,31 @@ await database
 )
 .set({
 
-
 created:
 Date.now(),
-
-
 
 status:
 "waiting",
 
 
-
 player1:{
-
 
 id:
 myPlayerId,
 
-
-score:0
-
+score:
+0
 
 },
-
-
 
 
 player2:null,
 
 
-
 game:null
 
 
-
 });
-
-
-
 
 
 
@@ -172,13 +153,10 @@ roomCode
 );
 
 
-
 openLobby();
 
 
-
 listenRoom();
-
 
 
 }
@@ -199,10 +177,8 @@ listenRoom();
 async function joinRoom(){
 
 
-
 const input =
-document
-.getElementById(
+document.getElementById(
 "room-input"
 );
 
@@ -215,23 +191,15 @@ input.value
 
 
 
-
-
 if(!code){
-
 
 alert(
 "Введите код комнаты"
 );
 
-
 return;
 
-
 }
-
-
-
 
 
 
@@ -246,25 +214,15 @@ await database
 
 
 
-
-
-
 if(!snapshot.exists()){
-
 
 alert(
 "Комната не найдена"
 );
 
-
 return;
 
-
 }
-
-
-
-
 
 
 
@@ -273,25 +231,15 @@ snapshot.val();
 
 
 
-
-
-
-
 if(room.player2){
-
 
 alert(
 "Комната уже заполнена"
 );
 
-
 return;
 
-
 }
-
-
-
 
 
 
@@ -300,17 +248,12 @@ myPlayerId =
 createPlayerId();
 
 
-
 myRole =
 "player2";
 
 
-
 currentRoomId =
 code;
-
-
-
 
 
 
@@ -325,16 +268,10 @@ code +
 id:
 myPlayerId,
 
-
 score:
 0
 
-
 });
-
-
-
-
 
 
 
@@ -350,15 +287,10 @@ code +
 
 
 
-
-
 openLobby();
 
 
-
 listenRoom();
-
-
 
 
 }
@@ -379,12 +311,8 @@ listenRoom();
 function listenRoom(){
 
 
-
 if(!currentRoomId)
 return;
-
-
-
 
 
 
@@ -403,12 +331,8 @@ snapshot.val();
 
 
 
-
-
 if(!room)
 return;
-
-
 
 
 
@@ -423,15 +347,12 @@ room.status==="ready"
 ){
 
 
-
-
-
 showRoomReady();
 
 
 
 
-
+// PLAYER 1 создаёт игру
 
 if(
 
@@ -460,8 +381,33 @@ startGame();
 
 
 
+
+// PLAYER 2 подключается к уже созданной игре
+
+if(
+
+myRole==="player2"
+
+){
+
+
+if(
+room.game &&
+room.game.question
+){
+
+
+startGame();
+
+
 }
 
+
+}
+
+
+
+}
 
 
 
@@ -487,10 +433,8 @@ startGame();
 function showCreatedRoom(code){
 
 
-
 const el =
-document
-.getElementById(
+document.getElementById(
 "created-room"
 );
 
@@ -520,7 +464,6 @@ el.textContent =
 function openLobby(){
 
 
-
 document
 .getElementById(
 "start-screen"
@@ -529,8 +472,6 @@ document
 .add(
 "hidden"
 );
-
-
 
 
 
@@ -545,16 +486,10 @@ document
 
 
 
-
-
-
-
 const display =
-document
-.getElementById(
+document.getElementById(
 "room-display"
 );
-
 
 
 
@@ -582,10 +517,8 @@ currentRoomId;
 function showRoomReady(){
 
 
-
 const wait =
-document
-.querySelector(
+document.querySelector(
 ".waiting"
 );
 
@@ -634,9 +567,6 @@ createRoom
 
 
 
-
-
-
 document
 .getElementById(
 "join-room-btn"
@@ -645,7 +575,6 @@ document
 "click",
 joinRoom
 );
-
 
 
 
