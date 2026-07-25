@@ -2,12 +2,15 @@
 <html lang="ru">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-    <title>Not a Human</title>
+<meta charset="UTF-8">
 
-    <link rel="stylesheet" href="style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Not a Human</title>
+
+<link rel="stylesheet" href="style.css">
+
 </head>
 
 
@@ -17,313 +20,400 @@
 <div id="app">
 
 
-    <!-- ==========================
-         СТАРТ
-    =========================== -->
 
-    <section id="start-screen">
+<!-- ==============================
+     ГЛАВНЫЙ ЭКРАН
+================================ -->
 
 
-        <h1>
-            Not a Human
-        </h1>
+<section id="start-screen">
 
 
-        <p class="subtitle">
-            Докажи, что ты человек
-        </p>
+<h1>
+    Not a Human
+</h1>
 
 
+<p class="subtitle">
+    Тест Тьюринга для двоих
+</p>
 
-        <div class="card">
 
+<div class="description">
 
-            <h3>
-                Создать игру
-            </h3>
+Один из вас может быть человеком.<br>
+Другой должен убедить всех, что он ИИ.
 
+</div>
 
-            <button 
-                class="btn"
-                id="create-room-btn">
 
-                🕵️ Создать комнату
 
-            </button>
+<div class="card">
 
 
+<h3>
+Создать комнату
+</h3>
 
-            <div 
-                class="room-code"
-                id="created-room">
 
-            </div>
+<button 
+class="btn"
+id="create-room-btn">
 
+🧠 Создать эксперимент
 
-        </div>
+</button>
 
 
 
+<div 
+id="created-room"
+class="room-code">
 
-        <div class="card">
+</div>
 
 
-            <h3>
-                Войти в игру
-            </h3>
+</div>
 
 
-            <input 
-                id="room-input"
-                placeholder="Введите код комнаты"
-                maxlength="6"
-            >
 
 
-            <button 
-                class="btn secondary"
-                id="join-room-btn">
 
-                🔗 Подключиться
+<div class="card">
 
-            </button>
 
+<h3>
+Подключиться
+</h3>
 
-        </div>
 
+<input
+id="room-input"
+placeholder="Код комнаты">
 
 
+<button
+class="btn secondary"
+id="join-room-btn">
 
-        <div 
-            class="status"
-            id="room-status">
+🔗 Войти
 
-        </div>
+</button>
 
 
+</div>
 
-    </section>
 
 
+</section>
 
 
 
-    <!-- ==========================
-         ЛОББИ
-    =========================== -->
 
 
-    <section 
-        id="lobby-screen"
-        class="hidden">
 
 
-        <h2>
-            Комната
-        </h2>
+<!-- ==============================
+     ОЖИДАНИЕ
+================================ -->
 
 
-        <div 
-            class="room-display"
-            id="room-display">
+<section
+id="lobby-screen"
+class="hidden">
 
-        </div>
 
+<h2>
+Комната создана
+</h2>
 
 
-        <div 
-            class="waiting">
 
-            ⏳ Ожидание второго игрока...
+<div class="experiment-box">
 
-        </div>
 
+Код эксперимента:
 
-    </section>
 
+<strong id="room-display">
 
+</strong>
 
 
+</div>
 
-    <!-- ==========================
-         ИГРА
-    =========================== -->
 
 
-    <section 
-        id="game-screen"
-        class="hidden">
+<div 
+class="waiting">
 
+⏳ Ожидание второго участника...
 
-        <header>
+</div>
 
 
-            <div>
-                Раунд:
-                <span id="round-number">
-                    1
-                </span>
-            </div>
+</section>
 
 
-            <div>
-                Очки:
-                <span id="score">
-                    0
-                </span>
-            </div>
 
 
-        </header>
 
 
 
 
-        <div class="question-card">
+<!-- ==============================
+     ИГРА
+================================ -->
 
 
-            <h2>
-                Вопрос
-            </h2>
+<section
+id="game-screen"
+class="hidden">
 
 
-            <p id="question-text">
+<header class="game-header">
 
-                ...
 
-            </p>
+<div>
 
+Раунд
 
-        </div>
+<span id="round-number">
+1
+</span>
 
+</div>
 
 
 
+<div>
 
-        <div class="answer-block">
+Очки
 
+<span id="score">
+0
+</span>
 
-            <textarea
-                id="answer-input"
-                placeholder="Напишите ответ..."
-            ></textarea>
+</div>
 
 
+</header>
 
-            <button
-                class="btn"
-                id="send-answer-btn">
 
-                Отправить
 
-            </button>
 
 
-        </div>
+<div class="role-card">
 
 
+<span>
+Ваша роль:
+</span>
 
 
-        <div 
-            class="waiting hidden"
-            id="answer-wait">
+<strong id="role-text">
 
-            Ответ отправлен. Ждём второго игрока...
+???
 
-        </div>
+</strong>
 
 
+</div>
 
-    </section>
 
 
 
 
+<div class="question-card">
 
 
+<h2>
+Вопрос
+</h2>
 
-    <!-- ==========================
-         ГОЛОСОВАНИЕ
-    =========================== -->
 
+<p id="question-text">
 
-    <section 
-        id="vote-screen"
-        class="hidden">
+Ожидание вопроса...
 
+</p>
 
-        <h2>
-            Кто настоящий человек?
-        </h2>
 
+</div>
 
 
-        <div class="answers">
 
 
-            <button
-                class="answer-card"
-                id="vote-one">
 
-                Игрок 1
+<div class="answer-area">
 
-            </button>
 
+<textarea
 
+id="answer-input"
 
-            <button
-                class="answer-card"
-                id="vote-two">
+placeholder="Ответьте так, чтобы вас приняли за ИИ..."
 
-                Игрок 2
+></textarea>
 
-            </button>
 
 
-        </div>
 
+<button
+class="btn"
+id="send-answer-btn">
 
+Отправить ответ
 
-    </section>
+</button>
 
 
+</div>
 
 
 
 
+<div 
+id="answer-wait"
+class="waiting hidden">
 
-    <!-- ==========================
-         ФИНАЛ
-    =========================== -->
+Ответ отправлен.<br>
+Ждём второго игрока...
 
+</div>
 
-    <section
-        id="final-screen"
-        class="hidden">
 
 
-        <h1>
-            Игра окончена
-        </h1>
+</section>
 
 
-        <div 
-            id="final-result">
 
-        </div>
 
 
-        <button
-            class="btn"
-            onclick="location.reload()">
 
-            Новая игра
 
-        </button>
 
+<!-- ==============================
+     ГОЛОСОВАНИЕ
+================================ -->
 
-    </section>
 
+<section
+id="vote-screen"
+class="hidden">
+
+
+<h2>
+
+Кто настоящий человек?
+
+</h2>
+
+
+
+<p class="hint">
+
+Проанализируйте стиль ответа
+
+</p>
+
+
+
+
+<div class="answers">
+
+
+
+<button
+class="answer-card"
+id="vote-one">
+
+
+Ответ игрока 1
+
+
+</button>
+
+
+
+
+<button
+class="answer-card"
+id="vote-two">
+
+
+Ответ игрока 2
+
+
+</button>
+
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+
+
+
+<!-- ==============================
+     РЕЗУЛЬТАТ
+================================ -->
+
+
+<section
+id="final-screen"
+class="hidden">
+
+
+<h1>
+
+Эксперимент завершён
+
+</h1>
+
+
+
+<div 
+class="result-card"
+id="final-result">
+
+</div>
+
+
+
+<div class="score-board">
+
+
+Ваш счёт:
+
+<span id="final-score">
+
+0
+
+</span>
+
+
+</div>
+
+
+
+<button
+class="btn"
+onclick="location.reload()">
+
+Новый эксперимент
+
+</button>
+
+
+</section>
 
 
 
@@ -333,7 +423,9 @@
 
 
 
-<!-- Firebase -->
+
+
+<!-- FIREBASE -->
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 
@@ -341,7 +433,8 @@
 
 
 
-<!-- Наши файлы -->
+
+<!-- GAME FILES -->
 
 
 <script src="firebase.js"></script>
@@ -353,6 +446,7 @@
 <script src="game.js"></script>
 
 <script src="ui.js"></script>
+
 
 
 </body>
