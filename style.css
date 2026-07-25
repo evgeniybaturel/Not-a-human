@@ -1,11 +1,30 @@
+/* ============================================================
+   КТО ЗДЕСЬ ИИ?
+   DESIGN SYSTEM
+============================================================ */
+
+
 * {
+
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+
 }
 
 
+
 body {
+
+    min-height: 100vh;
+
+    background:
+        radial-gradient(
+            circle at top,
+            #1e1b4b,
+            #090914 45%
+        );
+
 
     font-family:
         -apple-system,
@@ -14,17 +33,16 @@ body {
         Roboto,
         sans-serif;
 
-    background: #090914;
 
     color: #e5e7eb;
 
-    min-height: 100vh;
 
     display: flex;
 
     justify-content: center;
 
     align-items: center;
+
 
     padding: 16px;
 
@@ -32,70 +50,74 @@ body {
 
 
 
+
 #app {
+
 
     width: 100%;
 
     max-width: 480px;
 
+
     min-height: 600px;
 
-    background: #141421;
+
+    background:
+
+        rgba(20,20,33,0.96);
+
 
     border-radius: 28px;
 
-    border: 1px solid rgba(255,255,255,0.05);
 
-    padding: 28px 20px;
+    border:
+
+        1px solid
+
+        rgba(255,255,255,0.06);
+
+
+    padding: 24px 20px;
+
 
     display: flex;
 
     flex-direction: column;
 
+
 }
+
+
 
 
 
 .hidden {
 
-    display: none !important;
+    display:none !important;
 
 }
 
 
 
-/* =====================
-   СТАРТ
-===================== */
 
 
-#start-screen {
-
-    flex: 1;
-
-    display: flex;
-
-    flex-direction: column;
-
-    justify-content: center;
-
-    align-items: center;
-
-    text-align: center;
-
-    gap: 20px;
-
-}
+/* ============================================================
+   ОБЩИЕ
+============================================================ */
 
 
 
 h1 {
 
+
     font-size: 38px;
 
-    font-weight: 700;
+    text-align:center;
 
-    color: #f8fafc;
+    color:#f8fafc;
+
+    margin-bottom:10px;
+
 
 }
 
@@ -103,24 +125,47 @@ h1 {
 
 h1::after {
 
-    content: "";
 
-    display: block;
+    content:"";
 
-    width: 45px;
 
-    height: 3px;
+    display:block;
 
-    margin: 10px auto;
+
+    width:50px;
+
+
+    height:3px;
+
+
+    margin:12px auto;
+
+
+    border-radius:5px;
+
 
     background:
+
         linear-gradient(
             135deg,
             #8b5cf6,
             #38bdf8
         );
 
-    border-radius: 5px;
+
+}
+
+
+
+h2 {
+
+
+    text-align:center;
+
+    color:#f8fafc;
+
+    margin-bottom:20px;
+
 
 }
 
@@ -128,73 +173,151 @@ h1::after {
 
 .sub {
 
-    color: #8b8ba8;
 
-    font-size: 16px;
+    text-align:center;
+
+    color:#8b8ba8;
+
+    line-height:1.5;
+
+    margin-bottom:25px;
+
 
 }
 
 
 
-/* =====================
+
+
+
+/* ============================================================
+   ЭКРАНЫ
+============================================================ */
+
+
+#start-screen,
+#room-screen,
+#game-screen,
+#vote-screen {
+
+
+    flex:1;
+
+}
+
+
+
+
+
+#start-screen {
+
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+
+}
+
+
+
+
+
+
+/* ============================================================
    КАРТОЧКИ
-===================== */
+============================================================ */
 
 
 .card {
 
-    width: 100%;
 
-    background: #1b1b2b;
+    background:
 
-    border-radius: 22px;
+        #1a1a2b;
 
-    padding: 22px;
+
+    border-radius:22px;
+
+
+    padding:22px;
+
 
     border:
 
         1px solid
 
-        rgba(255,255,255,0.05);
+        #292941;
+
 
 }
+
+
 
 
 
 .divider {
 
-    margin: 18px 0;
 
-    color: #6b7280;
+    text-align:center;
+
+
+    margin:16px 0;
+
+
+    color:#777799;
+
 
 }
 
+
+
+
+
+
+/* ============================================================
+   INPUT
+============================================================ */
 
 
 input,
 textarea {
 
 
-    width: 100%;
+    width:100%;
 
-    background: #11111d;
+
+    background:
+
+        #10101b;
+
 
     border:
 
         1px solid
 
-        #2d2d45;
+        #30304a;
 
 
-    color: white;
+    color:white;
 
-    border-radius: 14px;
 
-    padding: 14px 16px;
+    border-radius:14px;
 
-    font-size: 16px;
 
-    outline: none;
+    padding:14px 16px;
+
+
+    font-size:16px;
+
+
+    outline:none;
+
+
+    margin-bottom:12px;
+
 
 }
 
@@ -203,7 +326,9 @@ textarea {
 input:focus,
 textarea:focus {
 
-    border-color: #8b5cf6;
+
+    border-color:#8b5cf6;
+
 
     box-shadow:
 
@@ -211,37 +336,60 @@ textarea:focus {
 
         rgba(139,92,246,.15);
 
+
 }
+
 
 
 
 textarea {
 
-    min-height: 120px;
 
-    resize: none;
+    height:130px;
+
+
+    resize:none;
+
 
 }
 
 
 
-/* =====================
+
+
+/* ============================================================
    КНОПКИ
-===================== */
+============================================================ */
 
 
 .btn {
 
 
-    width: 100%;
+    width:100%;
 
-    margin-top: 12px;
 
-    padding: 15px;
+    padding:16px;
 
-    border-radius: 16px;
 
-    border: none;
+    border:none;
+
+
+    border-radius:16px;
+
+
+    font-size:18px;
+
+
+    font-weight:600;
+
+
+    color:white;
+
+
+    cursor:pointer;
+
+
+    margin-top:8px;
 
 
     background:
@@ -253,173 +401,185 @@ textarea {
         );
 
 
-    color: white;
-
-    font-size: 18px;
-
-    font-weight: 600;
-
-
-    cursor: pointer;
-
 }
 
 
 
 .btn:active {
 
-    transform: scale(.97);
+
+    transform:scale(.97);
+
 
 }
+
 
 
 
 .btn-secondary {
 
+
     background:
 
         #222235;
+
 
     border:
 
         1px solid
 
-        #343450;
+        #383852;
+
 
 }
 
 
 
-/* =====================
+
+
+/* ============================================================
    КОМНАТА
-===================== */
-
-
-#room-info {
-
-    text-align: center;
-
-    background:
-
-        #1b1b2b;
-
-    padding: 25px;
-
-    border-radius: 20px;
-
-}
-
+============================================================ */
 
 
 .room-code {
 
 
-    margin: 15px 0;
+    text-align:center;
 
 
-    font-size: 36px;
+    font-size:40px;
 
 
-    letter-spacing: 8px;
+    font-weight:700;
 
 
-    color: #a78bfa;
+    letter-spacing:8px;
 
 
-    font-weight: 700;
+    color:#a78bfa;
+
+
+    margin:20px 0;
+
 
 }
 
 
 
-/* =====================
+
+
+#players-status {
+
+
+    text-align:center;
+
+
+    color:#9ca3af;
+
+
+    margin-bottom:15px;
+
+
+}
+
+
+
+
+
+
+/* ============================================================
    ИГРА
-===================== */
-
-
-#game-screen {
-
-
-    flex: 1;
-
-}
-
+============================================================ */
 
 
 .header {
 
 
-    display: flex;
+    display:flex;
 
-    justify-content: space-between;
 
-    padding-bottom: 15px;
+    justify-content:space-between;
+
+
+    color:#a78bfa;
+
+
+    padding-bottom:15px;
 
 
     border-bottom:
 
         1px solid
 
-        #252538;
+        #27273b;
 
-
-    color: #a5b4fc;
 
 }
+
 
 
 
 .question-box {
 
 
-    margin-top: 25px;
+    margin-top:25px;
+
+
+    padding:22px;
+
 
     background:
 
-        #1b1b2b;
+        #1a1a2b;
 
 
-    padding: 20px;
+    border-radius:22px;
 
-    border-radius: 20px;
+
+    border:
+
+        1px solid
+
+        #292941;
+
 
 }
+
+
 
 
 
 .label {
 
 
-    color:
-
-        #8b5cf6;
+    font-size:12px;
 
 
-    font-size: 13px;
+    color:#8b5cf6;
 
-    margin-bottom: 10px;
+
+    margin-bottom:10px;
+
 
 }
+
+
 
 
 
 #question-text {
 
 
-    font-size: 20px;
+    font-size:20px;
 
-    line-height: 1.5;
+
+    line-height:1.5;
+
 
 }
 
 
-
-.answer-box {
-
-
-    margin-top: 20px;
-
-}
 
 
 
@@ -428,25 +588,34 @@ textarea {
 
     text-align:center;
 
-    margin-top:20px;
 
     color:#8888aa;
 
+
+    margin-top:20px;
+
+
 }
 
 
 
-/* =====================
+
+
+
+
+/* ============================================================
    ГОЛОСОВАНИЕ
-===================== */
+============================================================ */
 
 
-#vote-screen {
+#answers-container {
 
 
-    flex:1;
+    margin-top:20px;
+
 
 }
+
 
 
 
@@ -455,26 +624,37 @@ textarea {
 
     background:
 
-        #1b1b2b;
+        #1a1a2b;
 
 
-    padding:16px;
+    padding:18px;
 
 
-    border-radius:16px;
+    border-radius:18px;
 
 
-    margin-top:12px;
+    margin-bottom:12px;
 
 
     border:
 
         1px solid
 
-        #2b2b42;
+        #30304a;
 
 
     cursor:pointer;
+
+
+}
+
+
+
+.answer-card:hover {
+
+
+    border-color:#8b5cf6;
+
 
 }
 
@@ -483,20 +663,25 @@ textarea {
 .answer-card.selected {
 
 
-    border-color:#8b5cf6;
-
-
     background:
 
         rgba(139,92,246,.15);
+
+
+    border-color:#8b5cf6;
+
 
 }
 
 
 
-/* =====================
-   АДАПТИВ
-===================== */
+
+
+
+
+/* ============================================================
+   МОБИЛЬНАЯ ВЕРСИЯ
+============================================================ */
 
 
 @media(max-width:420px){
@@ -504,24 +689,37 @@ textarea {
 
     #app {
 
-        border-radius:20px;
+
+        min-height:550px;
+
 
         padding:20px 14px;
 
+
+        border-radius:22px;
+
+
     }
+
 
 
     h1 {
 
+
         font-size:30px;
 
+
     }
+
 
 
     #question-text {
 
+
         font-size:18px;
 
+
     }
+
 
 }
