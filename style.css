@@ -5,24 +5,34 @@
 
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+
+    margin:0;
+
+    padding:0;
+
+    box-sizing:border-box;
+
 }
+
 
 
 body {
 
-    min-height: 100vh;
+
+    min-height:100vh;
+
 
     background:
+
         radial-gradient(
             circle at top,
             #1b1b35,
-            #090910 60%
+            #090910 65%
         );
 
+
     font-family:
+
         -apple-system,
         BlinkMacSystemFont,
         "Segoe UI",
@@ -30,58 +40,86 @@ body {
         sans-serif;
 
 
-    color: #eeeeff;
 
-    display: flex;
+    color:#eeeeff;
 
-    justify-content: center;
 
-    align-items: center;
+    display:flex;
 
-    padding: 20px;
+
+    justify-content:center;
+
+
+    align-items:center;
+
+
+    padding:20px;
+
 
 }
+
+
+
+
 
 
 
 #app {
 
-    width: 100%;
 
-    max-width: 480px;
+    width:100%;
 
-    min-height: 650px;
+
+    max-width:480px;
+
+
+
+    min-height:650px;
+
+
 
     background:
-        rgba(20,20,35,0.95);
+
+        rgba(20,20,35,.96);
+
 
 
     border:
 
-        1px solid rgba(255,255,255,0.08);
+        1px solid rgba(255,255,255,.08);
 
 
-    border-radius: 28px;
+
+    border-radius:28px;
 
 
-    padding: 25px;
+
+    padding:25px;
+
 
 
     box-shadow:
 
-        0 20px 60px rgba(0,0,0,0.5);
+        0 20px 60px rgba(0,0,0,.55);
 
 
-    overflow: hidden;
+
+    overflow:hidden;
+
 
 }
+
+
+
 
 
 
 
 .hidden {
 
-    display: none !important;
+
+    display:none !important;
+
 
 }
 
@@ -89,8 +127,10 @@ body {
 
 
 
+
+
 /* ============================================================
-   START SCREEN
+   SCREENS
 ============================================================ */
 
 
@@ -101,11 +141,14 @@ body {
 #final-screen {
 
 
-    display: flex;
+    display:flex;
 
-    flex-direction: column;
 
-    gap: 20px;
+    flex-direction:column;
+
+
+    gap:20px;
+
 
     animation:
         fade .3s ease;
@@ -118,36 +161,55 @@ body {
 
 @keyframes fade {
 
+
     from {
+
 
         opacity:0;
 
         transform:
             translateY(10px);
 
+
     }
 
 
     to {
+
 
         opacity:1;
 
         transform:
             translateY(0);
 
+
     }
+
 
 }
 
 
 
+
+
+
+
+/* ============================================================
+   TEXT
+============================================================ */
+
+
 h1 {
 
-    font-size: 38px;
+
+    font-size:38px;
+
 
     text-align:center;
 
-    letter-spacing: -1px;
+
+    letter-spacing:-1px;
+
 
 
     background:
@@ -159,32 +221,77 @@ h1 {
         );
 
 
+
     -webkit-background-clip:text;
+
 
     color:transparent;
 
+
 }
+
 
 
 
 
 h2 {
 
+
     font-size:24px;
 
+
 }
+
+
+
+
+
+h3 {
+
+
+    color:#ccccff;
+
+
+}
+
+
 
 
 
 .subtitle {
 
+
     text-align:center;
+
 
     color:#8888aa;
 
-    font-size:16px;
 
 }
+
+
+
+
+
+.description {
+
+
+    text-align:center;
+
+
+    color:#aaaacc;
+
+
+    line-height:1.6;
+
+
+    font-size:15px;
+
+
+}
+
+
+
 
 
 
@@ -197,9 +304,8 @@ h2 {
 .card {
 
 
-    background:
+    background:#191927;
 
-        #191927;
 
 
     border:
@@ -207,29 +313,30 @@ h2 {
         1px solid #292942;
 
 
+
     border-radius:20px;
+
 
 
     padding:20px;
 
 
+
     display:flex;
 
+
     flex-direction:column;
+
 
     gap:15px;
 
 
-}
-
-
-
-
-.card h3 {
-
-    color:#ccccff;
 
 }
+
+
+
+
 
 
 
@@ -247,7 +354,9 @@ textarea {
     width:100%;
 
 
+
     background:#11111d;
+
 
 
     border:
@@ -255,16 +364,21 @@ textarea {
         1px solid #30304a;
 
 
+
     border-radius:14px;
+
 
 
     padding:15px;
 
 
+
     color:white;
 
 
+
     font-size:16px;
+
 
 
     outline:none;
@@ -274,11 +388,13 @@ textarea {
 
 
 
+
 input:focus,
 textarea:focus {
 
 
     border-color:#8b5cf6;
+
 
 
     box-shadow:
@@ -292,15 +408,38 @@ textarea:focus {
 
 
 
+
 textarea {
 
 
     min-height:130px;
 
 
+
     resize:none;
 
+
 }
+
+
+
+
+
+
+
+
+textarea:disabled {
+
+
+    opacity:.6;
+
+
+    background:#0c0c16;
+
+
+}
+
+
 
 
 
@@ -317,25 +456,33 @@ textarea {
     width:100%;
 
 
+
     padding:15px;
+
 
 
     border:none;
 
 
+
     border-radius:16px;
+
 
 
     cursor:pointer;
 
 
+
     font-size:17px;
+
 
 
     font-weight:600;
 
 
+
     color:white;
+
 
 
 
@@ -348,6 +495,7 @@ textarea {
         );
 
 
+
     transition:.2s;
 
 
@@ -358,9 +506,33 @@ textarea {
 
 .btn:active {
 
+
     transform:scale(.96);
 
+
 }
+
+
+
+
+
+.btn:disabled {
+
+
+    opacity:.5;
+
+
+    cursor:not-allowed;
+
+
+    transform:none;
+
+
+    background:#333344;
+
+
+}
+
 
 
 
@@ -371,12 +543,17 @@ textarea {
     background:#25253a;
 
 
+
     border:
 
         1px solid #353552;
 
 
 }
+
+
+
+
 
 
 
@@ -393,18 +570,56 @@ textarea {
     text-align:center;
 
 
+
     font-size:32px;
+
 
 
     letter-spacing:5px;
 
 
+
     color:#34d399;
+
 
 
     font-weight:700;
 
+
 }
+
+
+
+
+.room-display {
+
+
+    background:#11111d;
+
+
+
+    padding:20px;
+
+
+
+    border-radius:16px;
+
+
+
+    text-align:center;
+
+
+
+    font-size:30px;
+
+
+
+    letter-spacing:6px;
+
+
+}
+
+
 
 
 
@@ -421,31 +636,6 @@ textarea {
 
 
 
-.room-display {
-
-
-    background:#11111d;
-
-
-    padding:20px;
-
-
-    border-radius:16px;
-
-
-    text-align:center;
-
-
-    font-size:30px;
-
-
-    letter-spacing:6px;
-
-
-}
-
-
-
 
 
 .waiting {
@@ -454,12 +644,79 @@ textarea {
     text-align:center;
 
 
+
     color:#9999bb;
+
 
 
     padding:15px;
 
+
 }
+
+
+
+
+
+.experiment-box {
+
+
+    background:#11111d;
+
+
+
+    border:
+
+        1px solid #30304a;
+
+
+
+    padding:20px;
+
+
+
+    border-radius:18px;
+
+
+
+    text-align:center;
+
+
+    color:#aaaacc;
+
+
+}
+
+
+
+
+
+.experiment-box strong {
+
+
+    display:block;
+
+
+    margin-top:10px;
+
+
+
+    font-size:32px;
+
+
+
+    letter-spacing:5px;
+
+
+
+    color:#34d399;
+
+
+}
+
+
+
+
 
 
 
@@ -470,19 +727,23 @@ textarea {
 ============================================================ */
 
 
-header {
+.game-header {
 
 
     display:flex;
 
 
+
     justify-content:space-between;
+
 
 
     color:#aaaacc;
 
 
+
     padding-bottom:15px;
+
 
 
     border-bottom:
@@ -502,19 +763,23 @@ header {
     background:#1c1c2c;
 
 
+
     border:
 
         1px solid #32324b;
 
 
+
     border-radius:20px;
+
 
 
     padding:20px;
 
 
-
 }
+
+
 
 
 
@@ -524,7 +789,9 @@ header {
     margin-top:15px;
 
 
+
     line-height:1.6;
+
 
 
     color:#ddddee;
@@ -536,12 +803,16 @@ header {
 
 
 
-.answer-block {
+.answer-area {
 
 
     display:flex;
 
+
+
     flex-direction:column;
+
+
 
     gap:15px;
 
@@ -552,9 +823,37 @@ header {
 
 
 
+
+
+
+
 /* ============================================================
-   VOTE
+   VOTING
 ============================================================ */
+
+
+#vote-title {
+
+
+    line-height:1.3;
+
+
+}
+
+
+
+
+
+.hint {
+
+
+    color:#8888aa;
+
+
+}
+
+
+
 
 
 .answers {
@@ -563,12 +862,17 @@ header {
     display:flex;
 
 
+
     flex-direction:column;
+
 
 
     gap:15px;
 
+
 }
+
+
 
 
 
@@ -578,27 +882,63 @@ header {
     background:#202035;
 
 
+
     border:
 
         1px solid #383854;
 
 
+
     border-radius:18px;
+
 
 
     padding:20px;
 
 
+
     color:white;
 
 
-    font-size:18px;
+
+    font-size:17px;
+
 
 
     cursor:pointer;
 
 
+
+    white-space:pre-line;
+
+
+
+    text-align:left;
+
+
+
+    line-height:1.5;
+
+
+
+    transition:.2s;
+
+
 }
+
+
+
+
+
+.answer-card:hover {
+
+
+    border-color:#8b5cf6;
+
+
+}
+
+
 
 
 
@@ -614,27 +954,82 @@ header {
 
 
 
+.answer-card:disabled {
+
+
+    opacity:.6;
+
+
+
+    cursor:not-allowed;
+
+
+}
+
+
+
+
+
+
+
+
+
 /* ============================================================
    FINAL
 ============================================================ */
 
 
-#final-result {
+.result-card {
 
 
     background:#191927;
 
 
+
     border-radius:18px;
 
 
+
     padding:20px;
+
 
 
     line-height:1.6;
 
 
 }
+
+
+
+
+
+.score-board {
+
+
+    background:#11111d;
+
+
+
+    border-radius:16px;
+
+
+
+    padding:18px;
+
+
+
+    text-align:center;
+
+
+
+    font-size:20px;
+
+
+}
+
+
+
+
 
 
 
@@ -648,23 +1043,35 @@ header {
 @media(max-width:420px){
 
 
+
     #app {
+
 
         min-height:560px;
 
+
+
         padding:18px;
+
+
 
         border-radius:22px;
 
+
     }
+
+
 
 
 
     h1 {
 
+
         font-size:32px;
 
+
     }
+
 
 
 
