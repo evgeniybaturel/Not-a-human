@@ -1,7 +1,7 @@
 // ============================================================
 // GAME ENGINE
 // NOT A HUMAN
-// 2 HUMAN + AI
+// Stable version
 // ============================================================
 
 
@@ -15,8 +15,11 @@ let hasVoted = false;
 
 let shuffledAnswers = [];
 
+let gameListener = null;
+
 let aiGenerating = false;
 
+let currentVoteOrder = null;
 
 
 
@@ -35,23 +38,25 @@ async function startGame(){
 
 
 
-    const ref =
-    database.ref(
+    const ref = database.ref(
         "rooms/" + currentRoomId
     );
 
 
 
-    const snapshot =
-    await ref.once("value");
+    const snapshot = await ref.once("value");
+
+    const room = snapshot.val();
 
 
 
-    const room =
-    snapshot.val();
+    if(!room)
+        return;
 
 
 
+
+    // если игра уже создана
     if(
         room.game &&
         room.game.question
@@ -66,46 +71,41 @@ async function startGame(){
 
 
 
+
+    // только первый игрок создаёт раунд
+
     if(myRole === "player1"){
 
 
 
         const question =
-        await generateQuestion();
+            await generateQuestion();
 
 
 
+        await ref.child("game").set({
 
+            round: currentRound,
 
-        await ref
-        .child("game")
-        .set({
+            question: question,
 
-            round:
-            currentRound,
-
-
-            question:
-            question,
-
+            status:"answering",
 
             answers:{},
 
-
             votes:{},
-
 
             aiGenerated:false,
 
-
-            status:
-            "answering"
+            voteOrder:null
 
 
         });
 
 
+
     }
+
 
 
 
@@ -131,69 +131,40 @@ function listenGame(){
 
 
 
-database
-.ref(
-"rooms/" +
-currentRoomId +
-"/game"
-)
-.on(
-"value",
-snapshot=>{
+    if(gameListener)
+        return;
 
 
 
-const game =
-snapshot.val();
+    gameListener = database
+    .ref(
+        "rooms/" +
+        currentRoomId +
+        "/game"
+    )
+    .on(
+        "value",
+        snapshot=>{
+
+
+            const game =
+            snapshot.val();
 
 
 
-
-if(!game)
-    return;
-
-
-
-
-
-if(game.question){
-
-
-showQuestion(
-game.question
-);
-
-
-}
+            if(!game)
+                return;
 
 
 
 
+            if(game.question){
 
+                showQuestion(
+                    game.question
+                );
 
-// два человека ответили
-
-if(
-
-game.answers &&
-
-game.answers.player1 &&
-
-game.answers.player2
-
-&&
-
-!game.aiGenerated
-
-){
-
-
-createAIAnswer(
-game
-);
-
-
-}
+            }
 
 
 
@@ -201,32 +172,68 @@ game
 
 
 
-
-// есть все 3 ответа
-
-if(
-
-game.answers &&
-
-game.answers.player1 &&
-
-game.answers.player2 &&
-
-game.answers.ai
-
-){
+            // оба человека ответили
+            // запускаем ИИ один раз
 
 
-openVoting(
-game.answers
-);
+            if(
+
+                game.status==="answering" &&
+
+                game.answers &&
+
+                game.answers.player1 &&
+
+                game.answers.player2
+
+            ){
 
 
-}
+                generateAIOnce();
+
+
+            }
 
 
 
-});
+
+
+
+
+            // голосование
+
+
+            if(
+
+                game.status==="voting"
+
+                &&
+
+                game.answers.player1
+
+                &&
+
+                game.answers.player2
+
+                &&
+
+                game.answers.ai
+
+            ){
+
+
+                openVoting(
+                    game
+                );
+
+
+            }
+
+
+
+        }
+    );
+
 
 
 }
@@ -259,7 +266,6 @@ document
 
 
 
-
 document
 .getElementById(
 "game-screen"
@@ -268,7 +274,6 @@ document
 .remove(
 "hidden"
 );
-
 
 
 
@@ -306,15 +311,10 @@ return;
 
 
 
-
-
 const input =
-document
-.getElementById(
+document.getElementById(
 "answer-input"
 );
-
-
 
 
 
@@ -324,17 +324,12 @@ input.value.trim();
 
 
 
-
 if(!text)
 return;
 
 
 
-
-
-hasAnswered = true;
-
-
+hasAnswered=true;
 
 
 
@@ -357,21 +352,18 @@ type:"human"
 
 
 
-
-input.disabled = true;
-
+input.disabled=true;
 
 
 
 const button =
-document
-.getElementById(
+document.getElementById(
 "send-answer-btn"
 );
 
 
 
-button.disabled = true;
+button.disabled=true;
 
 
 
@@ -404,11 +396,11 @@ document
 
 
 // ============================================================
-// AI PLAYER
+// AI GENERATION
 // ============================================================
 
 
-async function createAIAnswer(game){
+async function generateAIOnce(){
 
 
 
@@ -417,7 +409,7 @@ return;
 
 
 
-aiGenerating = true;
+aiGenerating=true;
 
 
 
@@ -432,26 +424,21 @@ currentRoomId +
 
 
 
-
 const snapshot =
-await ref.once(
-"value"
-);
+await ref.once("value");
 
 
 
-
-
-const current =
+const game =
 snapshot.val();
 
 
 
 
 
-
 if(
-current.aiGenerated
+game.aiGenerated ||
+game.status!=="answering"
 ){
 
 aiGenerating=false;
@@ -459,6 +446,19 @@ aiGenerating=false;
 return;
 
 }
+
+
+
+
+
+
+
+await ref.update({
+
+status:"ai_generating"
+
+});
+
 
 
 
@@ -476,19 +476,15 @@ game.question
 
 
 
-await ref
-.child(
+
+await ref.child(
 "answers/ai"
 )
 .set({
 
-text:
-answer,
+text:answer,
 
-
-type:
-"ai"
-
+type:"ai"
 
 });
 
@@ -498,9 +494,34 @@ type:
 
 
 
+
+// создаём постоянный порядок
+
+const order =
+shuffle([
+
+"player1",
+
+"player2",
+
+"ai"
+
+]);
+
+
+
+
+
+
+
+
 await ref.update({
 
-aiGenerated:true
+aiGenerated:true,
+
+status:"voting",
+
+voteOrder:order
 
 
 });
@@ -528,13 +549,12 @@ aiGenerating=false;
 // ============================================================
 
 
-function openVoting(answers){
+function openVoting(game){
 
 
 
 if(hasVoted)
 return;
-
 
 
 
@@ -546,7 +566,6 @@ document
 .add(
 "hidden"
 );
-
 
 
 
@@ -564,29 +583,37 @@ document
 
 
 
-const list=[
-
-
-{
-id:"player1",
-text:answers.player1.text
-},
+if(
+!game.voteOrder
+)
+return;
 
 
 
-{
-id:"player2",
-text:answers.player2.text
-},
+
+
+const answers = game.answers;
 
 
 
-{
-id:"ai",
-text:answers.ai.text
-}
 
 
+
+currentVoteOrder =
+game.voteOrder;
+
+
+
+
+
+
+const buttons=[
+
+"vote-one",
+
+"vote-two",
+
+"vote-three"
 
 ];
 
@@ -594,46 +621,37 @@ text:answers.ai.text
 
 
 
-shuffledAnswers =
-shuffle(list);
+
+buttons.forEach(
+(id,index)=>{
+
+
+const answerId =
+currentVoteOrder[index];
+
+
+const button =
+document.getElementById(id);
 
 
 
-
-
-
-
-document
-.getElementById(
-"vote-one"
+button.textContent =
+"Ответ " +
+String.fromCharCode(
+65+index
 )
-.textContent =
-"Ответ A\n\n" +
-shuffledAnswers[0].text;
++
+"\n\n"
++
+answers[answerId].text;
 
 
 
-
-
-document
-.getElementById(
-"vote-two"
-)
-.textContent =
-"Ответ B\n\n" +
-shuffledAnswers[1].text;
+button.disabled=false;
 
 
 
-
-
-document
-.getElementById(
-"vote-three"
-)
-.textContent =
-"Ответ C\n\n" +
-shuffledAnswers[2].text;
+});
 
 
 
@@ -661,6 +679,7 @@ return;
 
 
 
+
 hasVoted=true;
 
 
@@ -668,7 +687,7 @@ hasVoted=true;
 
 
 const selected =
-shuffledAnswers[index];
+currentVoteOrder[index];
 
 
 
@@ -683,11 +702,10 @@ myRole
 )
 .set({
 
-answer:
-selected.id
-
+answer:selected
 
 });
+
 
 
 
@@ -698,11 +716,9 @@ document
 ".answer-card"
 )
 .forEach(
-button=>{
+b=>{
 
-
-button.disabled=true;
-
+b.disabled=true;
 
 });
 
@@ -710,8 +726,8 @@ button.disabled=true;
 
 
 
-checkVotes();
 
+checkVotes();
 
 
 }
@@ -722,6 +738,11 @@ checkVotes();
 
 
 
+
+
+// ============================================================
+// CHECK VOTES
+// ============================================================
 
 
 async function checkVotes(){
@@ -748,10 +769,9 @@ snapshot.val();
 
 
 
-
 if(
 !votes ||
-Object.keys(votes).length < 2
+Object.keys(votes).length<2
 )
 return;
 
@@ -776,7 +796,7 @@ votes
 
 
 // ============================================================
-// SCORE
+// RESULT
 // ============================================================
 
 
@@ -788,8 +808,6 @@ let points=0;
 
 
 
-
-// угадал ИИ
 
 if(
 votes[myRole].answer==="ai"
@@ -803,9 +821,6 @@ points+=2;
 
 
 
-
-// тебя приняли за ИИ
-
 const other =
 myRole==="player1"
 ?
@@ -816,23 +831,19 @@ myRole==="player1"
 
 
 
-
 if(
 votes[other] &&
 votes[other].answer===myRole
 ){
 
-points+=1;
+points++;
 
 }
 
 
 
 
-
-
 myScore+=points;
-
 
 
 
@@ -847,10 +858,9 @@ myScore;
 
 
 
-
 setTimeout(
 nextRound,
-2500
+2000
 );
 
 
@@ -870,17 +880,15 @@ nextRound,
 // ============================================================
 
 
-function nextRound(){
+async function nextRound(){
 
 
 
 if(currentRound>=5){
 
-
 showFinal();
 
 return;
-
 
 }
 
@@ -892,15 +900,15 @@ currentRound++;
 
 hasAnswered=false;
 
-
 hasVoted=false;
-
 
 aiGenerating=false;
 
+currentVoteOrder=null;
 
 
 
+if(gameListener){
 
 database
 .ref(
@@ -908,8 +916,28 @@ database
 currentRoomId +
 "/game"
 )
-.remove();
+.off(
+"value",
+gameListener
+);
 
+
+gameListener=null;
+
+
+}
+
+
+
+
+
+await database
+.ref(
+"rooms/" +
+currentRoomId +
+"/game"
+)
+.remove();
 
 
 
@@ -931,6 +959,11 @@ startGame,
 
 
 
+// ============================================================
+// FINAL
+// ============================================================
+
+
 function showFinal(){
 
 
@@ -946,7 +979,6 @@ document
 
 
 
-
 document
 .getElementById(
 "final-screen"
@@ -955,7 +987,6 @@ document
 .remove(
 "hidden"
 );
-
 
 
 
@@ -979,13 +1010,20 @@ myScore;
 
 
 
+// ============================================================
+// HELPERS
+// ============================================================
+
+
 function shuffle(array){
 
 
-return array
+
+return [...array]
 .sort(
 ()=>Math.random()-0.5
 );
+
 
 
 }
@@ -1020,7 +1058,6 @@ sendAnswer
 
 
 
-
 document
 .getElementById(
 "vote-one"
@@ -1032,7 +1069,6 @@ document
 
 
 
-
 document
 .getElementById(
 "vote-two"
@@ -1041,7 +1077,6 @@ document
 "click",
 ()=>vote(1)
 );
-
 
 
 
@@ -1062,6 +1097,7 @@ document
 
 
 
+
 console.log(
-"🎮 Game engine loaded"
+"🎮 Stable game engine loaded"
 );
