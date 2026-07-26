@@ -4,50 +4,198 @@
 // ============================================================
 
 
-// Конфигурация Firebase
+// ============================================================
+// CONFIG
+// ============================================================
+
 
 const firebaseConfig = {
 
-    apiKey: "AIzaSyAUA65cW3VJrmfwHjKKxlUHKJVgYYEDjWo",
+
+    apiKey:
+    "AIzaSyAUA65cW3VJrmfwHjKKxlUHKJVgYYEDjWo",
+
 
     authDomain:
-        "not-a-human.firebaseapp.com",
+    "not-a-human.firebaseapp.com",
+
 
     databaseURL:
-        "https://not-a-human-default-rtdb.firebaseio.com",
+    "https://not-a-human-default-rtdb.firebaseio.com",
+
 
     projectId:
-        "not-a-human",
+    "not-a-human",
+
 
     storageBucket:
-        "not-a-human.firebasestorage.app",
+    "not-a-human.firebasestorage.app",
+
 
     messagingSenderId:
-        "180222999417",
+    "180222999417",
+
 
     appId:
-        "1:180222999417:web:b3650309fafe629edf0da8"
+    "1:180222999417:web:b3650309fafe629edf0da8"
+
 
 };
 
 
 
-// Инициализация Firebase
-
-firebase.initializeApp(firebaseConfig);
 
 
 
-// Подключаем Realtime Database
-
-const database = firebase.database();
 
 
 
-// Делаем доступным для других файлов
+// ============================================================
+// INIT FIREBASE
+// ============================================================
 
-window.database = database;
+
+if(!firebase.apps.length){
+
+
+    firebase.initializeApp(
+        firebaseConfig
+    );
+
+
+}
+else{
+
+
+    firebase.app();
+
+
+}
 
 
 
-console.log("🔥 Firebase подключен");
+
+
+
+
+
+
+// ============================================================
+// DATABASE
+// ============================================================
+
+
+const database =
+firebase.database();
+
+
+
+
+window.database =
+database;
+
+
+
+
+
+
+
+
+
+// ============================================================
+// CONNECTION STATUS
+// ============================================================
+
+
+const connectedRef =
+database.ref(".info/connected");
+
+
+
+connectedRef.on(
+"value",
+snapshot=>{
+
+
+if(snapshot.val() === true){
+
+
+console.log(
+"🟢 Firebase connected"
+);
+
+
+}
+else{
+
+
+console.log(
+"🔴 Firebase disconnected"
+);
+
+
+}
+
+
+});
+
+
+
+
+
+
+
+
+
+// ============================================================
+// ROOM CLEANUP SUPPORT
+// ============================================================
+
+
+function setupDisconnectCleanup(path){
+
+
+if(!path)
+return;
+
+
+
+const ref =
+database.ref(path);
+
+
+
+ref.onDisconnect()
+.update({
+
+online:false,
+
+lastSeen:
+Date.now()
+
+
+});
+
+
+
+}
+
+
+
+
+
+
+window.setupDisconnectCleanup =
+setupDisconnectCleanup;
+
+
+
+
+
+
+
+
+
+console.log(
+"🔥 Firebase loaded"
+);
