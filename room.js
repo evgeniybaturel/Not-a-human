@@ -1,7 +1,7 @@
 // ============================================================
 // ROOM SYSTEM
 // NOT A HUMAN
-// Создание и подключение комнат
+// Stable room manager
 // ============================================================
 
 
@@ -15,8 +15,6 @@ let gameStarted = false;
 
 
 
-
-
 // ============================================================
 // PLAYER ID
 // ============================================================
@@ -25,10 +23,32 @@ let gameStarted = false;
 function createPlayerId(){
 
 
-    return "player_" +
+    let saved =
+    localStorage.getItem(
+        "notHumanPlayerId"
+    );
+
+
+    if(saved)
+        return saved;
+
+
+
+    let id =
+    "player_" +
     Math.random()
     .toString(36)
     .substring(2,10);
+
+
+
+    localStorage.setItem(
+        "notHumanPlayerId",
+        id
+    );
+
+
+    return id;
 
 
 }
@@ -51,29 +71,24 @@ const chars =
 "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
 
-let code = "";
-
+let code="";
 
 
 for(let i=0;i<6;i++){
 
 
-    code +=
-    chars[
-        Math.floor(
-            Math.random()
-            *
-            chars.length
-        )
-    ];
+code +=
+chars[
+Math.floor(
+Math.random()*chars.length
+)
+];
 
 
 }
 
 
-
 return code;
-
 
 
 }
@@ -94,6 +109,7 @@ return code;
 async function createRoom(){
 
 
+
 myPlayerId =
 createPlayerId();
 
@@ -103,20 +119,26 @@ myRole =
 
 
 
-const roomCode =
+const code =
 generateRoomCode();
 
 
 
 currentRoomId =
-roomCode;
+code;
 
+
+
+localStorage.setItem(
+"notHumanRoom",
+code
+);
 
 
 
 await database
 .ref(
-"rooms/" + roomCode
+"rooms/"+code
 )
 .set({
 
@@ -132,10 +154,15 @@ player1:{
 id:
 myPlayerId,
 
-score:
-0
+online:true,
+
+lastSeen:
+Date.now(),
+
+score:0
 
 },
+
 
 
 player2:null,
@@ -144,19 +171,23 @@ player2:null,
 game:null
 
 
+
 });
 
 
 
-showCreatedRoom(
-roomCode
-);
+
+showCreatedRoom(code);
 
 
 openLobby();
 
 
 listenRoom();
+
+
+startHeartbeat();
+
 
 
 }
@@ -177,6 +208,7 @@ listenRoom();
 async function joinRoom(){
 
 
+
 const input =
 document.getElementById(
 "room-input"
@@ -188,6 +220,8 @@ const code =
 input.value
 .trim()
 .toUpperCase();
+
+
 
 
 
@@ -203,14 +237,15 @@ return;
 
 
 
-const snapshot =
-await database
-.ref(
-"rooms/" + code
-)
-.once(
-"value"
+const ref =
+database.ref(
+"rooms/"+code
 );
+
+
+
+const snapshot =
+await ref.once("value");
 
 
 
@@ -231,7 +266,48 @@ snapshot.val();
 
 
 
-if(room.player2){
+
+
+// если игрок уже был в комнате
+
+const id =
+createPlayerId();
+
+
+
+
+
+if(
+room.player1 &&
+room.player1.id===id
+){
+
+myRole="player1";
+
+}
+
+
+
+else if(
+room.player2 &&
+room.player2.id===id
+){
+
+myRole="player2";
+
+}
+
+
+
+else{
+
+
+
+if(
+room.player2
+&&
+room.player2.online
+){
 
 alert(
 "Комната уже заполнена"
@@ -243,47 +319,58 @@ return;
 
 
 
-
-myPlayerId =
-createPlayerId();
-
-
-myRole =
-"player2";
-
-
-currentRoomId =
-code;
+myRole="player2";
 
 
 
-await database
-.ref(
-"rooms/" +
-code +
-"/player2"
-)
+await ref
+.child("player2")
 .set({
 
-id:
-myPlayerId,
+id:id,
 
-score:
-0
+online:true,
+
+lastSeen:
+Date.now(),
+
+score:0
+
 
 });
 
 
+}
 
-await database
-.ref(
-"rooms/" +
-code +
-"/status"
-)
-.set(
-"ready"
+
+
+
+myPlayerId=id;
+
+
+currentRoomId=code;
+
+
+
+localStorage.setItem(
+"notHumanRoom",
+code
 );
+
+
+
+await ref
+.child(
+myRole
+)
+.update({
+
+online:true,
+
+lastSeen:
+Date.now()
+
+});
 
 
 
@@ -291,6 +378,65 @@ openLobby();
 
 
 listenRoom();
+
+
+startHeartbeat();
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// ============================================================
+// HEARTBEAT
+// ============================================================
+
+
+function startHeartbeat(){
+
+
+
+setInterval(()=>{
+
+
+if(
+!currentRoomId ||
+!myRole
+)
+return;
+
+
+
+database
+.ref(
+"rooms/"
++
+currentRoomId
++
+"/"
++
+myRole
+)
+.update({
+
+online:true,
+
+lastSeen:
+Date.now()
+
+});
+
+
+
+},10000);
+
 
 
 }
@@ -311,19 +457,21 @@ listenRoom();
 function listenRoom(){
 
 
+
 if(!currentRoomId)
 return;
 
 
 
+
 database
 .ref(
-"rooms/" +
-currentRoomId
+"rooms/"+currentRoomId
 )
 .on(
 "value",
 snapshot=>{
+
 
 
 const room =
@@ -338,69 +486,35 @@ return;
 
 
 
+
 if(
-
-room.player1 &&
-room.player2 &&
+room.player1
+&&
+room.player2
+&&
 room.status==="ready"
-
 ){
-
 
 showRoomReady();
 
 
 
-
-// PLAYER 1 создаёт игру
-
 if(
-
-myRole==="player1"
-&&
 !gameStarted
-
 ){
-
 
 gameStarted=true;
 
 
-setTimeout(
-()=>{
 
-startGame();
-
-},
-1000
-);
-
-
-}
-
-
-
-
-
-// PLAYER 2 подключается к уже созданной игре
-
-if(
-
-myRole==="player2"
-
-){
-
-
-if(
-room.game &&
-room.game.question
-){
+setTimeout(()=>{
 
 
 startGame();
 
 
-}
+},500);
+
 
 
 }
@@ -426,11 +540,44 @@ startGame();
 
 
 // ============================================================
+// CLEAN OLD PLAYER
+// ============================================================
+
+
+function checkPlayerAlive(player){
+
+
+if(!player)
+return false;
+
+
+
+return (
+Date.now()
+-
+player.lastSeen
+<
+30000
+);
+
+
+}
+
+
+
+
+
+
+
+
+
+// ============================================================
 // UI
 // ============================================================
 
 
 function showCreatedRoom(code){
+
 
 
 const el =
@@ -440,20 +587,13 @@ document.getElementById(
 
 
 
-if(el){
-
-
+if(el)
 el.textContent =
-"Код: " + code;
-
-
-}
+"Код: "+code;
 
 
 
 }
-
-
 
 
 
@@ -486,6 +626,7 @@ document
 
 
 
+
 const display =
 document.getElementById(
 "room-display"
@@ -493,20 +634,13 @@ document.getElementById(
 
 
 
-if(display){
-
-
+if(display)
 display.textContent =
 currentRoomId;
 
 
-}
-
-
 
 }
-
-
 
 
 
@@ -524,14 +658,9 @@ document.querySelector(
 
 
 
-if(wait){
-
-
+if(wait)
 wait.textContent =
 "✅ Игрок подключился. Запуск эксперимента...";
-
-
-}
 
 
 
@@ -587,5 +716,5 @@ joinRoom
 
 
 console.log(
-"🏠 Room system loaded"
+"🏠 Stable room system loaded"
 );
