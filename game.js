@@ -1,11 +1,14 @@
 // ============================================================
 // GAME ENGINE
 // NOT A HUMAN
-// Multiplayer synchronized engine v3
+// Multiplayer synchronized engine v4
+// 5 rounds system
 // ============================================================
 
 
 let currentRound = 1;
+
+let maxRounds = 5;
 
 let myScore = 0;
 
@@ -20,6 +23,11 @@ let gameListenerStarted = false;
 let scoreApplied = false;
 
 let currentVoteOrder = [];
+
+
+
+
+
 
 
 
@@ -55,6 +63,7 @@ async function startGame(){
 
 
 
+
     if(game && game.question){
 
         restoreGameState(game);
@@ -77,8 +86,11 @@ async function startGame(){
 
 
 
+
+
     const question =
     await generateQuestion();
+
 
 
 
@@ -87,6 +99,8 @@ async function startGame(){
     await ref.set({
 
         round:1,
+
+        maxRounds:5,
 
         question:question,
 
@@ -112,7 +126,10 @@ async function startGame(){
 
 
 
+
+
     listenGame();
+
 
 
 }
@@ -139,7 +156,10 @@ function listenGame(){
 
 
 
+
     gameListenerStarted=true;
+
+
 
 
 
@@ -161,6 +181,9 @@ function listenGame(){
 
 
 
+
+
+
             if(!game)
                 return;
 
@@ -175,13 +198,21 @@ function listenGame(){
 
 
 
+
+
+
             if(game.finished){
+
 
                 showFinalResult(game);
 
+
                 return;
 
+
             }
+
+
 
 
 
@@ -191,11 +222,15 @@ function listenGame(){
 
             if(game.question){
 
+
                 showQuestion(
                     game.question
                 );
 
+
             }
+
+
 
 
 
@@ -212,7 +247,9 @@ function listenGame(){
 
             ){
 
+
                 createAIAnswer(game);
+
 
             }
 
@@ -233,10 +270,15 @@ function listenGame(){
 
             ){
 
+
                 openVoting(
+
                     game.answers,
+
                     game.answerOrder
+
                 );
+
 
             }
 
@@ -273,6 +315,13 @@ game.round || 1;
 
 
 
+maxRounds =
+game.maxRounds || 5;
+
+
+
+
+
 
 const round =
 document.getElementById(
@@ -282,8 +331,10 @@ document.getElementById(
 
 
 if(round)
+
 round.textContent =
 currentRound;
+
 
 
 
@@ -299,8 +350,9 @@ game.answers[myRole]
 );
 
 
-
 }
+
+
 
 
 
@@ -316,16 +368,20 @@ game.votes[myRole]
 );
 
 
-
 }
+
+
+
 
 
 
 
 if(game.answerOrder){
 
+
 currentVoteOrder =
 game.answerOrder;
+
 
 }
 
@@ -362,7 +418,6 @@ document
 
 
 
-
 document
 .getElementById(
 "vote-screen"
@@ -375,7 +430,6 @@ document
 
 
 
-
 document
 .getElementById(
 "final-screen"
@@ -384,7 +438,6 @@ document
 .add(
 "hidden"
 );
-
 
 
 
@@ -412,16 +465,7 @@ text;
 
 
 
-}
-
-
-
-
-
-
-
-
-
+} 
 // ============================================================
 // SEND ANSWER
 // ============================================================
@@ -433,6 +477,7 @@ async function sendAnswer(){
 
 if(hasAnswered)
 return;
+
 
 
 
@@ -465,6 +510,7 @@ hasAnswered=true;
 
 
 
+
 await database
 .ref(
 "rooms/" +
@@ -487,23 +533,6 @@ time:Date.now()
 
 
 
-await database
-.ref(
-"rooms/" +
-currentRoomId +
-"/game"
-)
-.update({
-
-status:"answering"
-
-});
-
-
-
-
-
-
 input.disabled=true;
 
 
@@ -513,6 +542,7 @@ document
 "send-answer-btn"
 )
 .disabled=true;
+
 
 
 
@@ -528,7 +558,16 @@ document
 
 
 
-} 
+}
+
+
+
+
+
+
+
+
+
 // ============================================================
 // AI PLAYER
 // ============================================================
@@ -544,7 +583,9 @@ return;
 
 
 
+
 aiGenerating=true;
+
 
 
 
@@ -560,10 +601,12 @@ currentRoomId +
 
 
 
+
 const snapshot =
 await ref.once(
 "value"
 );
+
 
 
 
@@ -576,10 +619,15 @@ snapshot.val();
 
 
 
+
 if(
+
 current.aiGenerated ||
+
 !current.answers.player1 ||
+
 !current.answers.player2
+
 ){
 
 
@@ -626,7 +674,6 @@ time:Date.now()
 
 
 
-
 await ref.update({
 
 aiGenerated:true,
@@ -634,7 +681,6 @@ aiGenerated:true,
 status:"voting"
 
 });
-
 
 
 
@@ -663,12 +709,12 @@ async function openVoting(answers, order){
 
 
 
-if(
-!order
-){
+if(!order){
 
 
-const list=[
+
+order =
+shuffle([
 
 "player1",
 
@@ -676,14 +722,7 @@ const list=[
 
 "ai"
 
-];
-
-
-
-order =
-shuffle(
-list
-);
+]);
 
 
 
@@ -709,8 +748,10 @@ order
 
 
 
+
 currentVoteOrder =
 order;
+
 
 
 
@@ -745,6 +786,7 @@ document
 
 
 
+
 document
 .getElementById(
 "vote-one"
@@ -757,6 +799,7 @@ answers[
 order[0]
 ]
 .text;
+
 
 
 
@@ -822,6 +865,7 @@ return;
 
 
 
+
 hasVoted=true;
 
 
@@ -831,6 +875,7 @@ hasVoted=true;
 
 const selected =
 currentVoteOrder[index];
+
 
 
 
@@ -864,11 +909,12 @@ document
 .forEach(
 button=>{
 
+
 button.disabled=true;
 
-}
 
-);
+});
+
 
 
 
@@ -923,6 +969,7 @@ if(
 !votes.player1 ||
 !votes.player2
 )
+
 return;
 
 
@@ -939,17 +986,7 @@ votes
 });
 
 
-
-}
-
-
-
-
-
-
-
-
-
+} 
 // ============================================================
 // FINISH ROUND
 // ============================================================
@@ -965,6 +1002,7 @@ database.ref(
 currentRoomId +
 "/game"
 );
+
 
 
 
@@ -987,7 +1025,6 @@ snapshot.val();
 
 
 
-
 if(
 game.scoreApplied
 )
@@ -998,18 +1035,13 @@ return;
 
 
 
-
 let scores = {
 
-player1:
-0,
+player1:0,
 
-player2:
-0
+player2:0
 
 };
-
-
 
 
 
@@ -1030,39 +1062,58 @@ votes.player2.answer;
 
 
 
+// Игрок 1 угадал ИИ
 
 if(
 player1Vote === "ai"
-)
+){
+
 scores.player1 += 2;
 
+}
 
 
 
+
+
+// Игрок 2 угадал ИИ
 
 if(
 player2Vote === "ai"
-)
+){
+
 scores.player2 += 2;
 
+}
 
 
 
 
+
+// Игрок 1 узнал ответ игрока 2
 
 if(
 player1Vote === "player2"
-)
+){
+
 scores.player2 += 1;
 
+}
 
 
 
+
+
+// Игрок 2 узнал ответ игрока 1
 
 if(
 player2Vote === "player1"
-)
+){
+
 scores.player1 += 1;
+
+}
+
 
 
 
@@ -1095,7 +1146,7 @@ scoreApplied:true
 
 
 // ============================================================
-// FINAL
+// FINAL RESULT
 // ============================================================
 
 
@@ -1144,7 +1195,6 @@ document
 
 
 
-
 if(
 scoreApplied
 )
@@ -1154,7 +1204,10 @@ return;
 
 
 
+
 scoreApplied=true;
+
+
 
 
 
@@ -1173,11 +1226,21 @@ myScore += score;
 
 
 
+
+
+const finalScore =
 document
 .getElementById(
 "final-score"
-)
-.textContent =
+);
+
+
+
+
+
+if(finalScore)
+
+finalScore.textContent =
 myScore;
 
 
@@ -1186,13 +1249,29 @@ myScore;
 
 
 
+
+const result =
 document
 .getElementById(
 "final-result"
-)
-.textContent =
+);
 
-"Раунд завершён\n\n" +
+
+
+
+
+if(result){
+
+
+
+result.textContent =
+
+"Раунд " +
+game.round +
+" из " +
+game.maxRounds +
+
+"\n\n" +
 
 "Игрок 1: " +
 game.scores.player1 +
@@ -1211,11 +1290,93 @@ game.scores.player2 +
 
 
 
+const nextButton =
+document
+.getElementById(
+"next-round-btn"
+);
+
+
+
+
+
+const newButton =
+document
+.getElementById(
+"new-experiment-btn"
+);
+
+
+
+
+
+
+
+if(
+game.round < game.maxRounds
+){
+
+
+
+if(nextButton)
+
+nextButton.classList
+.remove(
+"hidden"
+);
+
+
+
+
+if(newButton)
+
+newButton.classList
+.add(
+"hidden"
+);
+
+
+
+}
+else{
+
+
+
+if(nextButton)
+
+nextButton.classList
+.add(
+"hidden"
+);
+
+
+
+
+if(newButton)
+
+newButton.classList
+.remove(
+"hidden"
+);
+
+
+
+}
+
+
+
+}
+
+
+
+
+
+
 
 
 
 // ============================================================
-// NEXT ROUND READY SYSTEM
+// NEXT ROUND
 // ============================================================
 
 
@@ -1244,7 +1405,6 @@ true
 
 
 
-
 database
 .ref(
 "rooms/" +
@@ -1265,16 +1425,54 @@ snapshot.val();
 
 
 
+
 if(
+
 ready &&
 ready.player1 &&
 ready.player2
+
 ){
 
 
 
-if(myRole !== "player1")
+
+
+if(
+myRole !== "player1"
+)
+
 return;
+
+
+
+
+
+
+
+
+
+const snapshot =
+await database
+.ref(
+"rooms/" +
+currentRoomId +
+"/game"
+)
+.once(
+"value"
+);
+
+
+
+
+
+
+
+const oldGame =
+snapshot.val();
+
+
 
 
 
@@ -1299,7 +1497,10 @@ currentRoomId +
 .set({
 
 round:
-currentRound + 1,
+oldGame.round + 1,
+
+maxRounds:
+5,
 
 question:question,
 
@@ -1323,6 +1524,12 @@ readyNextRound:{}
 
 
 
+
+
+resetRoundState();
+
+
+
 }
 
 
@@ -1333,36 +1540,12 @@ readyNextRound:{}
 
 } 
 // ============================================================
-// HELPERS
+// RESET ROUND STATE
 // ============================================================
 
 
-function shuffle(array){
+function resetRoundState(){
 
-
-return array
-.slice()
-.sort(
-()=>Math.random()-0.5
-);
-
-
-}
-
-
-
-
-
-
-
-
-
-// ============================================================
-// RESET ROUND LOCAL STATE
-// ============================================================
-
-
-function resetLocalRound(){
 
 
 hasAnswered=false;
@@ -1378,18 +1561,25 @@ currentVoteOrder=[];
 
 
 
+
+
 const input =
-document.getElementById(
+document
+.getElementById(
 "answer-input"
 );
 
 
 
+
+
 if(input){
+
 
 input.value="";
 
 input.disabled=false;
+
 
 }
 
@@ -1397,24 +1587,64 @@ input.disabled=false;
 
 
 
+
 const send =
-document.getElementById(
+document
+.getElementById(
 "send-answer-btn"
 );
 
 
 
+
+
 if(send)
+
 send.disabled=false;
 
 
 
 
 
+
+
+const wait =
 document
 .getElementById(
 "answer-wait"
-)
+);
+
+
+
+
+
+
+if(wait)
+
+wait
+.classList
+.add(
+"hidden"
+);
+
+
+
+
+
+
+const nextButton =
+document
+.getElementById(
+"next-round-btn"
+);
+
+
+
+
+
+if(nextButton)
+
+nextButton
 .classList
 .add(
 "hidden"
@@ -1433,65 +1663,31 @@ document
 
 
 // ============================================================
-// LEAVE ROOM SUPPORT
+// NEW EXPERIMENT
 // ============================================================
 
 
-async function leaveGame(){
+async function newExperiment(){
 
 
 
 if(
-!currentRoomId ||
-!myRole
-)
-return;
+typeof leaveRoom === "function"
+){
 
 
+await leaveRoom();
 
 
+}
 
-await database
-.ref(
-"rooms/" +
-currentRoomId +
-"/" +
-myRole
-)
-.remove();
-
-
-
-
-
-
-localStorage.removeItem(
-"notHumanRoom"
-);
-
-
-localStorage.removeItem(
-"notHumanRole"
-);
-
-
-
-
-
-currentRoomId=null;
-
-myRole=null;
-
-currentVoteOrder=[];
-
-gameListenerStarted=false;
-
-
-
-
+else{
 
 
 location.reload();
+
+
+}
 
 
 
@@ -1506,7 +1702,7 @@ location.reload();
 
 
 // ============================================================
-// RESTORE AFTER REFRESH
+// RESTORE AFTER F5
 // ============================================================
 
 
@@ -1517,6 +1713,7 @@ async function restoreGameAfterReload(){
 if(
 !currentRoomId
 )
+
 return;
 
 
@@ -1555,7 +1752,9 @@ return;
 
 
 
+
 restoreGameState(game);
+
 
 
 
@@ -1565,9 +1764,11 @@ if(
 game.finished
 ){
 
+
 showFinalResult(
 game
 );
+
 
 }
 
@@ -1576,10 +1777,15 @@ game.status==="voting"
 ){
 
 
+
 openVoting(
+
 game.answers,
+
 game.answerOrder
+
 );
+
 
 
 }
@@ -1587,9 +1793,11 @@ game.answerOrder
 else{
 
 
+
 showQuestion(
 game.question
 );
+
 
 
 }
@@ -1618,6 +1826,8 @@ document
 
 
 
+
+
 document
 .getElementById(
 "send-answer-btn"
@@ -1626,6 +1836,7 @@ document
 "click",
 sendAnswer
 );
+
 
 
 
@@ -1644,6 +1855,8 @@ document
 
 
 
+
+
 document
 .getElementById(
 "vote-two"
@@ -1652,6 +1865,8 @@ document
 "click",
 ()=>vote(1)
 );
+
+
 
 
 
@@ -1669,6 +1884,35 @@ document
 
 
 
+
+
+
+
+document
+.getElementById(
+"next-round-btn"
+)
+?.addEventListener(
+"click",
+nextRound
+);
+
+
+
+
+
+
+
+document
+.getElementById(
+"new-experiment-btn"
+)
+?.addEventListener(
+newExperiment
+);
+
+
+
 });
 
 
@@ -1678,6 +1922,31 @@ document
 
 
 
+// ============================================================
+// HELPER
+// ============================================================
+
+
+function shuffle(array){
+
+
+return array
+.slice()
+.sort(
+()=>Math.random()-0.5
+);
+
+
+}
+
+
+
+
+
+
+
+
+
 console.log(
-"🎮 Not a Human game engine v3 loaded"
+"🎮 Not a Human game engine v4 loaded"
 );
