@@ -20,7 +20,7 @@ let aiGenerating = false;
 
 let gameListenerStarted = false;
 
-let scoreApplied = false;
+let resultShown = false;
 
 let currentVoteOrder = [];
 
@@ -1257,7 +1257,7 @@ document
 
 
 if(
-scoreApplied
+resultShown
 )
 return;
 
@@ -1267,7 +1267,7 @@ return;
 
 
 
-scoreApplied=true;
+resultShown=true;
 
 
 
@@ -1538,7 +1538,7 @@ currentRoomId +
 
 
 
-readyRef.on(
+readyRef.once(
 "value",
 async snapshot=>{
 
@@ -1700,10 +1700,6 @@ scoreApplied:false,
 readyNextRound:{}
 
 });
-
-
-
-}
 
 
 
