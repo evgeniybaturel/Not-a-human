@@ -1,7 +1,7 @@
 // ============================================================
 // GAME ENGINE
 // NOT A HUMAN
-// Multiplayer synchronized engine v4
+// Multiplayer synchronized engine v5
 // 5 rounds system
 // ============================================================
 
@@ -79,6 +79,7 @@ async function startGame(){
 
 
 
+
     if(myRole !== "player1")
         return;
 
@@ -104,6 +105,18 @@ async function startGame(){
 
         question:question,
 
+        questionsUsed:[
+            question
+        ],
+
+        totalScores:{
+
+            player1:0,
+
+            player2:0
+
+        },
+
         answers:{},
 
         votes:{},
@@ -121,7 +134,6 @@ async function startGame(){
         readyNextRound:{}
 
     });
-
 
 
 
@@ -199,6 +211,24 @@ function listenGame(){
 
 
 
+            if(
+
+                game.status==="answering" &&
+
+                game.answers &&
+
+                Object.keys(game.answers).length===0
+
+            ){
+
+                resetRoundState();
+
+            }
+
+
+
+
+
 
 
             if(game.finished){
@@ -211,7 +241,6 @@ function listenGame(){
 
 
             }
-
 
 
 
@@ -241,8 +270,11 @@ function listenGame(){
             if(
 
                 game.answers &&
+
                 game.answers.player1 &&
+
                 game.answers.player2 &&
+
                 !game.aiGenerated
 
             ){
@@ -264,8 +296,11 @@ function listenGame(){
             if(
 
                 game.answers &&
+
                 game.answers.player1 &&
+
                 game.answers.player2 &&
+
                 game.answers.ai
 
             ){
@@ -340,6 +375,7 @@ currentRound;
 
 
 
+
 if(game.status==="answering"){
 
 
@@ -387,16 +423,7 @@ game.answerOrder;
 
 
 
-}
-
-
-
-
-
-
-
-
-
+} 
 // ============================================================
 // SHOW QUESTION
 // ============================================================
@@ -465,7 +492,16 @@ text;
 
 
 
-} 
+}
+
+
+
+
+
+
+
+
+
 // ============================================================
 // SEND ANSWER
 // ============================================================
@@ -506,6 +542,7 @@ return;
 
 
 hasAnswered=true;
+
 
 
 
@@ -1062,8 +1099,6 @@ votes.player2.answer;
 
 
 
-// Игрок 1 угадал ИИ
-
 if(
 player1Vote === "ai"
 ){
@@ -1075,8 +1110,6 @@ scores.player1 += 2;
 
 
 
-
-// Игрок 2 угадал ИИ
 
 if(
 player2Vote === "ai"
@@ -1090,8 +1123,6 @@ scores.player2 += 2;
 
 
 
-// Игрок 1 узнал ответ игрока 2
-
 if(
 player1Vote === "player2"
 ){
@@ -1103,8 +1134,6 @@ scores.player2 += 1;
 
 
 
-
-// Игрок 2 узнал ответ игрока 1
 
 if(
 player2Vote === "player1"
@@ -1120,6 +1149,34 @@ scores.player1 += 1;
 
 
 
+const totalScores =
+game.totalScores || {
+
+player1:0,
+
+player2:0
+
+};
+
+
+
+
+
+
+totalScores.player1 +=
+scores.player1;
+
+
+
+totalScores.player2 +=
+scores.player2;
+
+
+
+
+
+
+
 
 await ref.update({
 
@@ -1128,6 +1185,8 @@ finished:true,
 status:"finished",
 
 scores:scores,
+
+totalScores:totalScores,
 
 scoreApplied:true
 
@@ -1195,10 +1254,13 @@ document
 
 
 
+
+
 if(
 scoreApplied
 )
 return;
+
 
 
 
@@ -1213,14 +1275,25 @@ scoreApplied=true;
 
 
 
-const score =
-game.scores[myRole] || 0;
+const total =
+game.totalScores || {
+
+player1:
+0,
+
+player2:
+0
+
+};
 
 
 
 
 
-myScore += score;
+
+myScore =
+total[myRole];
+
 
 
 
@@ -1273,17 +1346,31 @@ game.maxRounds +
 
 "\n\n" +
 
+"Очки за раунд:\n" +
+
 "Игрок 1: " +
 game.scores.player1 +
-" очков\n" +
+"\n" +
 
 "Игрок 2: " +
 game.scores.player2 +
-" очков";
+
+"\n\n" +
+
+"Общий счёт:\n" +
+
+"Игрок 1: " +
+total.player1 +
+"\n" +
+
+"Игрок 2: " +
+total.player2;
 
 
 
 }
+
+
 
 
 
@@ -1318,12 +1405,23 @@ game.round < game.maxRounds
 
 
 
-if(nextButton)
+if(nextButton){
 
 nextButton.classList
 .remove(
 "hidden"
 );
+
+
+nextButton.disabled=false;
+
+
+nextButton.textContent =
+"Следующий раунд";
+
+
+}
+
 
 
 
@@ -1384,19 +1482,38 @@ async function nextRound(){
 
 
 
-const ref =
-database.ref(
-"rooms/" +
-currentRoomId +
-"/game/readyNextRound/" +
-myRole
+const button =
+document.getElementById(
+"next-round-btn"
 );
 
 
 
 
 
-await ref.set(
+if(button){
+
+button.disabled=true;
+
+button.textContent =
+"Ждём второго игрока...";
+
+}
+
+
+
+
+
+
+
+await database
+.ref(
+"rooms/" +
+currentRoomId +
+"/game/readyNextRound/" +
+myRole
+)
+.set(
 true
 );
 
@@ -1405,13 +1522,23 @@ true
 
 
 
-database
-.ref(
+
+
+const readyRef =
+database.ref(
 "rooms/" +
 currentRoomId +
 "/game/readyNextRound"
-)
-.on(
+);
+
+
+
+
+
+
+
+
+readyRef.on(
 "value",
 async snapshot=>{
 
@@ -1428,11 +1555,16 @@ snapshot.val();
 
 if(
 
-ready &&
-ready.player1 &&
-ready.player2
+!ready ||
+!ready.player1 ||
+!ready.player2
 
-){
+)
+
+return;
+
+
+
 
 
 
@@ -1451,8 +1583,7 @@ return;
 
 
 
-
-const snapshot =
+const gameSnapshot =
 await database
 .ref(
 "rooms/" +
@@ -1470,7 +1601,7 @@ currentRoomId +
 
 
 const oldGame =
-snapshot.val();
+gameSnapshot.val();
 
 
 
@@ -1479,8 +1610,45 @@ snapshot.val();
 
 
 
-const question =
+if(
+oldGame.round >= oldGame.maxRounds
+)
+
+return;
+
+
+
+
+
+
+
+
+let question="";
+
+
+
+
+
+do{
+
+
+question =
 await generateQuestion();
+
+
+
+}
+
+while(
+
+oldGame.questionsUsed &&
+
+oldGame.questionsUsed.includes(
+question
+)
+
+);
+
 
 
 
@@ -1500,9 +1668,20 @@ round:
 oldGame.round + 1,
 
 maxRounds:
-5,
+oldGame.maxRounds,
 
 question:question,
+
+questionsUsed:[
+
+...(oldGame.questionsUsed || []),
+
+question
+
+],
+
+totalScores:
+oldGame.totalScores,
 
 answers:{},
 
@@ -1521,12 +1700,6 @@ scoreApplied:false,
 readyNextRound:{}
 
 });
-
-
-
-
-
-resetRoundState();
 
 
 
@@ -1563,6 +1736,7 @@ currentVoteOrder=[];
 
 
 
+
 const input =
 document
 .getElementById(
@@ -1582,6 +1756,7 @@ input.disabled=false;
 
 
 }
+
 
 
 
@@ -1618,7 +1793,6 @@ document
 
 
 
-
 if(wait)
 
 wait
@@ -1632,62 +1806,19 @@ wait
 
 
 
-const nextButton =
+
 document
-.getElementById(
-"next-round-btn"
-);
+.querySelectorAll(
+".answer-card"
+)
+.forEach(
+button=>{
 
 
+button.disabled=false;
 
 
-
-if(nextButton)
-
-nextButton
-.classList
-.add(
-"hidden"
-);
-
-
-
-}
-
-
-
-
-
-
-
-
-
-// ============================================================
-// NEW EXPERIMENT
-// ============================================================
-
-
-async function newExperiment(){
-
-
-
-if(
-typeof leaveRoom === "function"
-){
-
-
-await leaveRoom();
-
-
-}
-
-else{
-
-
-location.reload();
-
-
-}
+});
 
 
 
@@ -1737,8 +1868,11 @@ currentRoomId +
 
 
 
+
 const game =
 snapshot.val();
+
+
 
 
 
@@ -1815,6 +1949,69 @@ game.question
 
 
 // ============================================================
+// NEW EXPERIMENT
+// ============================================================
+
+
+async function newExperiment(){
+
+
+
+if(
+typeof leaveRoom === "function"
+){
+
+
+await leaveRoom();
+
+
+}
+else{
+
+
+location.reload();
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// ============================================================
+// SHUFFLE
+// ============================================================
+
+
+function shuffle(array){
+
+
+return array
+.slice()
+.sort(
+()=>Math.random()-0.5
+);
+
+
+}
+
+
+
+
+
+
+
+
+
+// ============================================================
 // BUTTONS
 // ============================================================
 
@@ -1856,7 +2053,6 @@ document
 
 
 
-
 document
 .getElementById(
 "vote-two"
@@ -1871,7 +2067,6 @@ document
 
 
 
-
 document
 .getElementById(
 "vote-three"
@@ -1880,8 +2075,6 @@ document
 "click",
 ()=>vote(2)
 );
-
-
 
 
 
@@ -1908,8 +2101,11 @@ document
 "new-experiment-btn"
 )
 ?.addEventListener(
+"click",
 newExperiment
 );
+
+
 
 
 
@@ -1922,31 +2118,7 @@ newExperiment
 
 
 
-// ============================================================
-// HELPER
-// ============================================================
-
-
-function shuffle(array){
-
-
-return array
-.slice()
-.sort(
-()=>Math.random()-0.5
-);
-
-
-}
-
-
-
-
-
-
-
-
 
 console.log(
-"🎮 Not a Human game engine v4 loaded"
+"🎮 Not a Human game engine v5 loaded"
 );
