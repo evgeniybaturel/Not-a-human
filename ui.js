@@ -1,9 +1,8 @@
 // ============================================================
 // UI CONTROLLER
 // NOT A HUMAN
-// Интерфейс игры
+// Interface controller v3
 // ============================================================
-
 
 
 // ============================================================
@@ -195,6 +194,84 @@ input.value =
 
 
 
+function resetGameUI(){
+
+
+
+const input =
+document
+.getElementById(
+"answer-input"
+);
+
+
+
+if(input){
+
+
+input.value = "";
+
+input.disabled = false;
+
+
+}
+
+
+
+
+
+const button =
+document
+.getElementById(
+"send-answer-btn"
+);
+
+
+
+if(button){
+
+
+button.disabled = false;
+
+
+}
+
+
+
+
+
+const wait =
+document
+.getElementById(
+"answer-wait"
+);
+
+
+
+if(wait){
+
+
+wait
+.classList
+.add(
+"hidden"
+);
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+
+
+
 // ============================================================
 // VOTING
 // ============================================================
@@ -206,6 +283,34 @@ function showVoting(){
 showScreen(
 "vote-screen"
 );
+
+
+}
+
+
+
+
+
+
+
+
+
+function disableVoting(){
+
+
+
+document
+.querySelectorAll(
+".answer-card"
+)
+.forEach(
+button=>{
+
+
+button.disabled=true;
+
+
+});
 
 
 }
@@ -305,6 +410,81 @@ value;
 
 
 // ============================================================
+// ROOM EXIT
+// ============================================================
+
+
+function setupLeaveButton(){
+
+
+
+const button =
+document
+.getElementById(
+"leave-room-btn"
+);
+
+
+
+
+
+if(
+button &&
+typeof leaveRoom === "function"
+){
+
+
+button.onclick =
+leaveRoom;
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// ============================================================
+// RESTORE UI
+// ============================================================
+
+
+function restoreUI(){
+
+
+
+if(
+typeof currentRoomId !== "undefined" &&
+currentRoomId
+){
+
+
+showLobby();
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// ============================================================
 // INIT
 // ============================================================
 
@@ -321,6 +501,9 @@ console.log(
 
 
 
+setupLeaveButton();
+
+
 });
 
 
@@ -331,5 +514,5 @@ console.log(
 
 
 console.log(
-"🎨 UI loaded"
+"🎨 Not a Human UI v3 loaded"
 );
